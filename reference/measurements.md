@@ -9,9 +9,21 @@ across the opening, measured at the middle not the corners".
 
 ## Datum
 
-Origin is the **bottom-left corner of the new panel outline**, viewed from the
-front, with the panel held the way the label reads. +X right, +Y up, +Z out of
-the front face towards you.
+The original fascia is discarded, so its outline is not a useful reference.
+Measure the button and LED cluster against itself:
+
+- **X = 0** at the left edge of the left-most button tab
+- **Y = 0** at the hinge line of the button row
+- **z = 0** at the dryer's outer skin, the surface the flange screws onto,
+  with +Z out of the machine towards you
+
+The cluster is what has to be right; the panel outline around it is ours to
+choose, and `params.py` shifts the cluster into panel coordinates once that
+outline is settled.
+
+Screw positions do not need measuring. The printed panel is its own drilling
+template: offer it up with the plungers over the switches, mark through the
+flange holes, drill. They only have to land on solid metal.
 
 The dryer is wall-mounted and the fascia runs horizontally along the bottom of
 the machine as it hangs. The board silkscreen reads upside-down in that
