@@ -64,11 +64,22 @@ def plunger(p: Params, deduct: float = 0.0, overlap: float = 0.0) -> Part:
 
 
 def _tab_outline(p: Params, grow: float = 0.0) -> Sketch:
-    return RectangleRounded(
-        p.button_width + 2 * grow,
-        p.button_height + 2 * grow,
-        p.button_radius + grow,
-    )
+    """The tab profile, optionally grown or shrunk all round by `grow`.
+
+    The radius is clamped to what the rectangle can actually carry. The tabs
+    are narrow, so a radius that suits the full outline will not survive being
+    shrunk for the raised pad, and `RectangleRounded` will not accept a radius
+    of half the side or more.
+    """
+    width = p.button_width + 2 * grow
+    height = p.button_height + 2 * grow
+    if width <= 0 or height <= 0:
+        raise ValueError(
+            f"a tab of {p.button_width} x {p.button_height} cannot be grown by "
+            f"{grow}: that leaves {width} x {height}"
+        )
+    radius = min(p.button_radius + grow, width / 2 - 0.01, height / 2 - 0.01)
+    return RectangleRounded(width, height, max(radius, 0.01))
 
 
 def flexure_slot(p: Params, sw: Switch) -> Part:

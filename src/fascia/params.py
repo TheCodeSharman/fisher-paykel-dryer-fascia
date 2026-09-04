@@ -171,11 +171,15 @@ class Params:
     # ------------------------------------------------------------------
     # Buttons: shared
     # ------------------------------------------------------------------
-    button_width: float = 11.0  # PLACEHOLDER
+    button_width: float = 5.63  # measured, F4
     button_height: float = 13.0  # PLACEHOLDER
-    button_radius: float = 4.0
-    #: Boss on the back of the button that reaches down to the switch.
-    plunger: float = 4.0
+    #: The tabs look like arches, so this is provisionally half the width, a
+    #: semicircular top. PLACEHOLDER until F7.
+    button_radius: float = 2.8
+    #: Boss on the back of the button that reaches down to the switch. It has
+    #: to fit inside a tab only 5.63 wide, and land on the switch actuator, so
+    #: check it against both. PLACEHOLDER until the actuator is measured.
+    plunger: float = 3.5
     #: Gap left between the plunger tip and the switch actuator at rest, so the
     #: panel does not hold the switches half-pressed.
     pre_travel: float = 0.5
@@ -191,7 +195,7 @@ class Params:
     hinge_band: float = 2.0
     hinge_thickness: float = 0.8
     flexure_pad_rise: float = 0.6
-    flexure_pad_inset: float = 1.0
+    flexure_pad_inset: float = 0.8
 
     # ------------------------------------------------------------------
     # Buttons: "separate" variant, loose printed caps in through-apertures

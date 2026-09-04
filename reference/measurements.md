@@ -98,7 +98,7 @@ tab near the middle, away from the cracks.
 | # | What | Value | How taken |
 |---|---|---|---|
 | F3 | Face thickness | 2.73 mm | **on the wrap-around return edge, not the face.** Assumed equal to the face; confirm at the crack that runs through the face |
-| F4 | Tab width | | across the tab, inside the slot |
+| F4 | Tab width | 5.63 mm | across the tab, inside the slot |
 | F5 | Tab height | | hinge line to the top of the tab |
 | F6 | Slot width | | the gap itself |
 | F7 | Tab corner radius | | |
