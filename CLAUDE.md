@@ -53,6 +53,12 @@ still fail to produce a solid.
   hinge line at the top, tabs hanging down, LED row below them. The board
   silkscreen runs the other way; do not assume its designators follow the
   buttons.
+- **Anything read off `photos/03` or `04` comes out backwards.** Those show the
+  fascia the way its label was printed, which is 180 degrees from the frame
+  everything here uses, because the machine hangs inverted. The button names
+  were assigned from that photo and ran the wrong way the whole length of the
+  row. The LED labels are still unmapped and will trip on exactly the same
+  thing; so will the label artwork.
 - Button and LED positions are stored in **cluster coordinates** (x from the
   left-most tab's left edge, y from the hinge line, both growing away from it
   so tabs and LEDs are at negative y), and placed on the panel by `cluster_x`

@@ -109,7 +109,9 @@ opening's left edge to last opening's right edge, should read **156.02**.
 | keylock | | | | hinged on its **left** edge, the one with no slot, so the tab runs to the right |
 
 Names confirmed against the part, and they run the opposite way to the first
-reading off the label photo. The measured 3 | 2 | 3 grouping corroborates it:
+reading off the label photo &mdash; which is the same 180 degree rotation as
+everything else here, since that photo shows the fascia as its label was
+printed and the machine hangs inverted. The LED names will trip on it too. The measured 3 | 2 | 3 grouping corroborates it:
 wrinkle guard falls in with the temperature pair, and start/pause, power and
 delay start make the three at the far end. Which of each pair is up and which
 is down is still a guess, and only matters for the label artwork.
