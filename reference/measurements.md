@@ -289,14 +289,38 @@ nothing that matters any more.
    whether the hinge wants any relief past the tab (`hinge_band`, currently
    nothing). Print a strip of tabs at a few thicknesses and pick by feel.
 
-7. **The lip overhangs when printed.** Front face down, the lip ends up at the
+7. **The LED holes look bigger than 3.35.** `photos/10-fascia-front-holes.jpg`
+   scaled against the button openings, which are a known 10.57, puts them
+   around 4.5 to 5. The ratio is the clearer tell: in the photo the pitch is
+   roughly 2.2 hole diameters, where 3.35 against a 10.91 pitch gives 3.26.
+   That is what makes the gaps between bezels read as too wide.
+
+   5.48 was the first answer given, then corrected to 3.35. The photo favours
+   the first. Possibly the two are the front opening and a bore behind it.
+   Worth one careful reading across a hole in the middle of a group, away from
+   the damage.
+
+   The pitches are not in doubt: the group of three is visibly wider-spaced
+   than the group of four in the photo, which is 11.54 against 10.91.
+
+8. **The right-hand LEDs hang off one uncertain reading.** `led09` to `led10`
+   was taken as 20.20 and flagged a guess, because the tab clips that hole's
+   left edge and there is no edge left to measure from. Everything right of it
+   inherits the error. It wants an independent tie: from the left edge of the
+   `delay_start` button opening down to `led11`, say, which is undamaged.
+
+   The original's tab does clip that LED. Ours may not have to: the slot here
+   is 1.2 against the original's 2.41, so the keylock tab spans 12.97 along x
+   where the original spans 15.39.
+
+9. **The lip overhangs when printed.** Front face down, the lip ends up at the
    top of the print, standing `lip_width` out beyond the walls with nothing
    under it. Either it wants a taper down to 45 degrees so it self-supports, or
    it gets printed with support. Support would touch the side that faces the
    room rather than the mounting face, so it is cosmetic rather than serious.
    Worth settling once the outline is fixed, since the lip changes with it.
 
-8. **Does the recess extend past the slot?** The model recesses the tab and its
+10. **Does the recess extend past the slot?** The model recesses the tab and its
    slot. The close-up looks like a wider rounded rectangle reaching a little
    way into the panel around each tab. If so it is presumably there so the
    label is not dragged over the slot's edge. Worth a reading of how far out it
