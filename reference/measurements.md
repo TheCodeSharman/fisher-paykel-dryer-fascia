@@ -197,7 +197,15 @@ nothing that matters any more.
    turned on its side down in the LED row. All of `S1`-`S9` are used.
 4. ~~Printer and material.~~ Settled: PETG on FDM, panel printed flat with the
    front face on the bed.
-5. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
+5. **The hinge does not match the original and does not look workable.**
+   Deferred to test prints rather than redesigned blind. What is there now is a
+   band across the top of the tab, thinned from behind to `hinge_thickness`
+   over `hinge_band`, which is a guess and not a copy. Worth measuring on the
+   original before printing: how thick the material actually is at the hinge,
+   whether it is thinned at all or just flexes the full 2.73, and how far back
+   from the slot ends the thinning runs. Print a strip of tabs at a few
+   thicknesses and pick by feel.
+6. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
    the top of the walls by `body_inset`. Depending on how deep `reach` turns
    out, that may want a taper down to 45 degrees so it self-supports. Not worth
    solving until the depth is measured.

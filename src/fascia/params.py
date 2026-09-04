@@ -189,7 +189,9 @@ class Params:
     # ------------------------------------------------------------------
     skin_to_switch: float = 18.0  # PLACEHOLDER
     skin_to_led: float = 20.0  # PLACEHOLDER
-    reach: float = 12.0  # PLACEHOLDER
+    #: PLACEHOLDER. Deeper keeps the plungers short, but sinks the buttons
+    #: down a well. See `plunger_tip_sweep` for what shallow costs.
+    reach: float = 6.0
 
     # ------------------------------------------------------------------
     # Label
@@ -255,6 +257,9 @@ class Params:
     #: Gap left between the plunger tip and the switch actuator at rest, so the
     #: panel does not hold the switches half-pressed.
     pre_travel: float = 0.5
+    #: How far the switch actuator moves to click. PLACEHOLDER: typical for a
+    #: tactile switch, but this one is from 1997 and should be measured.
+    switch_travel: float = 0.25
     #: How far below the hinge line the plunger sits. Further down means more
     #: leverage and a lighter press. None puts it at the middle of the tab.
     #: PLACEHOLDER until the actuator position under the tab is known.
@@ -349,6 +354,19 @@ class Params:
     @property
     def plunger_length(self) -> float:
         return self.switch_gap - self.pre_travel
+
+    @property
+    def plunger_tip_sweep(self) -> float:
+        """How far the plunger tip slides sideways over a full press.
+
+        The tab swings on its hinge, so the plunger swings with it and the tip
+        travels an arc rather than straight down. A long plunger amplifies a
+        small rotation into real sideways movement, and if it exceeds the
+        actuator's radius the plunger walks off the switch. That is the price
+        of a shallow `reach`.
+        """
+        angle = self.switch_travel / self.plunger_drop  # radians, small
+        return self.plunger_length * angle
 
     @property
     def tunnel_length(self) -> float:
