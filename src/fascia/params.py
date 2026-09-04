@@ -148,24 +148,34 @@ _SWITCHES = tuple(
 #: a photo has already produced one wrong grouping.
 _LED_NAMES = tuple(f"led{i:02d}" for i in range(1, 14))
 
-#: Centre to centre along the row, all measured. No two groups share a
-#: spacing: 11.54 inside the three, 10.91 inside the four, 5.98 inside the
-#: close-set three at the end.
+#: Centre to centre along the row, re-measured off the counterbore edges,
+#: which calipers seat against properly. The first pass took them off the hole
+#: edges and ran consistently long, by about 0.4 each, which would have
+#: accumulated badly over twelve.
+#:
+#: Within a group the spacing is taken as uniform and the readings averaged:
+#: the group of four came out 10.31, 10.41, 10.37, a spread of 0.10, which is
+#: technique rather than real variation on a moulded part. Averaging also stops
+#: that noise accumulating along the row.
 _LED_PITCHES = (
-    19.34,  # led01 -> led02, measured, the gap after the lone first LED
-    11.54,  # led02 -> led03, measured, inside the group of three
-    11.54,  # led03 -> led04, measured, same as the last
-    16.89,  # led04 -> led05, measured, the gap across to the group of four
-    10.91,  # led05 -> led06, measured, inside the group of four
-    10.91,  # led06 -> led07, measured, same again
-    10.91,  # led07 -> led08, measured, closes the group of four
-    28.65,  # led08 -> led09, measured, the gap to the lone LED
-    20.20,  # led09 -> led10, APPROXIMATE: spans the keylock, and the hole
-            # is clipped on its left edge so the reading is a guess
-    8.44,  # led10 -> led11, measured, across to the close-set three
+    18.89,  # led01 -> led02, re-measured off the counterbores
+    11.31,  # led02 -> led03, re-measured off the counterbores
+    11.31,  # led03 -> led04, follows the earlier 'same as the last', not re-measured
+    16.48,  # led04 -> led05, re-measured off the counterbores
+    10.36,  # led05 -> led06, the group of four, see note below
+    10.36,  # led06 -> led07
+    10.36,  # led07 -> led08
+    28.85,  # led08 -> led09, re-measured off the counterbores
+    19.77,  # led09 -> led10, derived: the keylock takes led10's left edge, so
+            # this was measured led09's left counterbore edge to led10's right,
+            # 25.43, less one counterbore diameter
+    7.84,  # led10 -> led11, derived: 2.18 of clear gap between the two
+           # counterbores, plus one counterbore diameter
     5.0,
-    5.98,  # led11 -> led12, measured, the close-set three
-    5.98,  # led12 -> led13, measured, same again
+    5.97,  # led11 -> led12, derived: these three sit too close for a
+           # counterbore edge between them, so the span across all three was
+           # taken, 17.6 less one counterbore diameter, halved
+    5.97,  # led12 -> led13
 )
 
 _LEDS = tuple(

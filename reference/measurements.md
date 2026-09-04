@@ -196,24 +196,30 @@ the keylock's position at the same time.
 
 | LED | Pitch from previous | X | Note |
 |---|---|---|---|
-| led01 | &mdash; | 0.00 | on the centreline of `delay_start` |
-| led02 | 19.34 | 19.34 | gap after the lone first LED |
-| led03 | 11.54 | 30.88 | |
-| led04 | 11.54 | 42.42 | |
-| led05 | 16.89 | 59.31 | gap |
-| led06 | 10.91 | 70.22 | |
-| led07 | 10.91 | 81.13 | |
-| led08 | 10.91 | 92.04 | |
-| led09 | 28.65 | 120.69 | gap to the lone LED |
+| led01 | &mdash; | 0.00 | on the centreline of `wrinkle_guard` |
+| led02 | 18.89 | 18.89 | |
+| led03 | 11.31 | 30.20 | |
+| led04 | 11.31 | 41.51 | follows led02-03, not separately re-measured |
+| led05 | 16.48 | 57.99 | |
+| led06 | 10.36 | 68.35 | group of four, averaged from 10.31 / 10.41 / 10.37 |
+| led07 | 10.36 | 78.71 | |
+| led08 | 10.36 | 89.07 | |
+| led09 | 28.85 | 117.92 | |
 | *keylock* | | | *tab, not an LED* |
-| led10 | 20.20 | 140.89 | **approximate**, spans the keylock and the hole is clipped |
-| led11 | 8.44 | 149.33 | |
-| led12 | 5.98 | 154.33 | the close-set three |
-| led13 | 5.98 | 160.31 | |
+| led10 | 19.77 | 137.69 | derived: 25.43 from led09's left counterbore edge to led10's right, less one counterbore |
+| led11 | 7.84 | 145.53 | derived: 2.18 of gap between counterbores, plus one counterbore |
+| led12 | 5.97 | 150.53 | derived: 17.6 across all three, less one counterbore, halved |
+| led13 | 5.97 | 156.50 | |
 
-The row spans 160.31, running further right than the buttons' 145.39. No two
-groups share a spacing: 11.54 inside the three, 10.91 inside the four, 5.98
-inside the close-set three.
+The row spans 156.50 centre to centre, running further right than the buttons'
+145.39.
+
+**Re-measured off the counterbore edges**, which calipers seat against; the
+first pass used the hole edges and ran long by about 0.4 a time, which would
+have accumulated badly over twelve. Where a counterbore edge was unreachable
+the reading was taken across a span and the diameter subtracted, which is exact
+since every counterbore is 5.66. The close-set three have only 0.31 between
+their counterbores, so all three were spanned at once.
 
 Still needed: **D**, the hole diameter and whether they all match, and how far
 the LED tips stand above the board.
@@ -311,9 +317,14 @@ nothing that matters any more.
    left edge and there is no edge left to measure from. Everything right of it
    inherits the error.
 
-   Simplest fix: measure the **right** edges of the two counterbores. The clip
-   takes the left side only, so right-to-right gives the pitch cleanly and no
-   tie back to the button row is needed.
+   ~~Resolved~~: measured 25.43 from led09's left counterbore edge to led10's
+   right, less one counterbore diameter, giving 19.77. With that, the keylock
+   slot clears led10's counterbore by 0.57, where the original clips it &mdash;
+   our slot is 1.2 against the original's 2.41.
+
+   Still assumed: the keylock is centred in the gap between the two. The
+   original plainly is not, since it clips. Worth a direct reading of the
+   keylock opening against led09 before printing.
 
    The original's tab does clip that LED. Ours may not have to: the slot here
    is 1.2 against the original's 2.41, so the keylock tab spans 12.97 along x
