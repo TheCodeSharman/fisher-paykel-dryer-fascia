@@ -192,9 +192,10 @@ class Params:
     # ------------------------------------------------------------------
     button_width: float = 5.63  # measured, F4
     button_height: float = 10.57  # measured, F5
-    #: The tabs look like arches, so this is provisionally half the width, a
-    #: semicircular top. PLACEHOLDER until F7.
-    button_radius: float = 2.8
+    #: Confirmed semicircular (F7), so this is half the width. `_tab_outline`
+    #: clamps it just under that, since RectangleRounded will not take exactly
+    #: half a side.
+    button_radius: float = 2.815
     #: Boss on the back of the button that reaches down to the switch. It has
     #: to fit inside a tab only 5.63 wide, and land on the switch actuator, so
     #: check it against both. PLACEHOLDER until the actuator is measured.
@@ -210,11 +211,19 @@ class Params:
     # ------------------------------------------------------------------
     # Buttons: "flexure" variant, replicating the original F&P design.
     #
-    # A tab is cut free on three sides by an inverted-U slot and stays joined
-    # along its bottom edge, so it swings like a trapdoor. The printed label
+    # A tab is cut free on three sides by a U-shaped slot and stays joined
+    # along its top edge, so it swings down like a trapdoor. The printed label
     # bridges the slot and doubles as the seal and the cushion.
     # ------------------------------------------------------------------
-    flexure_slot: float = 0.9
+    #: Width of the slot cut around the tab.
+    #:
+    #: The original measures 2.41 (F6), which is an injection-moulding
+    #: constraint: the tool needs steel of some thickness between tab and
+    #: panel. Printing has no such constraint, only that the gap separates
+    #: reliably on the bed and that the label can bridge it, so this is three
+    #: nozzle widths instead. Open it back out towards 2.41 if the tabs come
+    #: off the bed fused to the panel.
+    flexure_slot: float = 1.2
     hinge_band: float = 2.0
     hinge_thickness: float = 0.8
     flexure_pad_rise: float = 0.6

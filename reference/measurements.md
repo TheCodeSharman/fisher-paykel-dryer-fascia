@@ -100,8 +100,8 @@ tab near the middle, away from the cracks.
 | F3 | Face thickness | 2.73 mm | **on the wrap-around return edge, not the face.** Assumed equal to the face; confirm at the crack that runs through the face |
 | F4 | Tab width | 5.63 mm | across the tab, inside the slot |
 | F5 | Tab height | 10.57 mm | hinge line to the free end. **The hinge is at the top and the tab hangs down**, so the tab occupies negative Y |
-| F6 | Slot width | | the gap itself |
-| F7 | Tab corner radius | | |
+| F6 | Slot width | 2.41 mm | the gap itself. Wide, because moulding needs steel there. **Cross-check wanted:** the whole opening, outer edge to outer edge, should be ~10.45 |
+| F7 | Tab corner radius | semicircular | so half the tab width, 2.815 |
 | F8 | Tab proud of the face | | up, flush or dished |
 | F9 | Hinge line to top | 41.07 mm | **confirm what "top" is** &mdash; taken as the top edge of the fascia in the same frame, i.e. 41.07 above the hinge line |
 | F10 | Hinge line to bottom edge | | the other half of the height, below the LED row |
@@ -110,8 +110,13 @@ Vertical stack in this frame, top to bottom: top of fascia, hinge line, tabs
 hanging down from it, LED row, bottom of fascia. Tabs and LEDs are both at
 negative y.
 
-Chosen for the print: front plate `thickness` 2.8, which is F3 rounded up to
-14 layers at 0.2.
+Chosen for the print, and why they differ from the measurements:
+
+- front plate `thickness` 2.8 &mdash; F3 rounded up to 14 layers at 0.2
+- `flexure_slot` 1.2 &mdash; three nozzle widths, rather than copying F6's 2.41.
+  That figure is a moulding constraint we do not share; ours only has to
+  separate on the bed and be bridgeable by the label. Widen it towards 2.41 if
+  the tabs print fused to the panel.
 
 ## LEDs
 
