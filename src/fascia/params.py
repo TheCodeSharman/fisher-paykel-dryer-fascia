@@ -262,8 +262,11 @@ class Params:
     switch_travel: float = 0.25
     #: How far below the hinge line the plunger sits. Further down means more
     #: leverage and a lighter press. None puts it at the middle of the tab.
-    #: PLACEHOLDER until the actuator position under the tab is known.
-    plunger_offset: float | None = None
+    #:
+    #: PLACEHOLDER. The original's bump is not centred on the tab, it sits low
+    #: on it, so this is set to put a pad of `flexure_pad_diameter` near the
+    #: free end with a little margin. Wants the real hinge-to-pad-centre.
+    plunger_offset: float | None = 7.3
 
     # ------------------------------------------------------------------
     # Buttons: "flexure" variant, replicating the original F&P design.
@@ -283,7 +286,9 @@ class Params:
     flexure_slot: float = 1.2
     hinge_band: float = 2.0
     hinge_thickness: float = 0.8
-    #: The pressed pad is a circle on the tab, measured at 5.25 across (F8).
+    #: The pressed pad is a circle on the tab, measured at 5.25 across (F8),
+    #: which is as good as the full 5.63 tab width once a moulded edge
+    #: radius is allowed for. It sits low on the tab, not centred.
     flexure_pad_diameter: float = 5.25
     #: How far that pad stands proud of the front face.
     #:
