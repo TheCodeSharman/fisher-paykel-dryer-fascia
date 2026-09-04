@@ -69,7 +69,7 @@ class ScrewHole:
 
 
 # ---------------------------------------------------------------------------
-# Board features, in **cluster coordinates**: x from the left edge of the
+# Board features, in **cluster coordinates**: x from the centre of the
 # left-most tab, y from the button hinge line, +y up. Readings off the old
 # fascia go in here raw; `cluster_x` and `cluster_y` place the whole group on
 # the panel, so no measurement has to be converted by hand.
@@ -80,18 +80,56 @@ class ScrewHole:
 # Names come from the original printed label. Positions are still PLACEHOLDER.
 # ---------------------------------------------------------------------------
 
-_SWITCHES = (
-    Switch("delay_start", 2.8, 0.0),
-    Switch("power", 20.8, 0.0),
-    Switch("start_pause", 38.8, 0.0),
-    Switch("dryness_down", 64.8, 0.0),
-    Switch("dryness_up", 82.8, 0.0),
-    Switch("temp_down", 108.8, 0.0),
-    Switch("temp_up", 126.8, 0.0),
-    Switch("wrinkle_guard", 152.8, 0.0),
-    # The keylock is turned on its side and sits down in the LED row rather
-    # than on the button line. Same tab size as the rest. PLACEHOLDER position,
-    # and the rotation sign still needs settling: which edge is its hinge?
+def _row(names: tuple[str, ...], pitches: tuple[float, ...], y: float) -> tuple:
+    """Lay names out along x from cumulative centre-to-centre pitches.
+
+    Positions come from pitches rather than absolute offsets because that is
+    how they are measured: the row is longer than a caliper, so each feature is
+    measured from its neighbour. Storing the readings and summing them here
+    keeps arithmetic out of the worksheet.
+    """
+    x = 0.0
+    out = []
+    for i, name in enumerate(names):
+        if i:
+            x += pitches[i - 1]
+        out.append((name, x, y))
+    return tuple(out)
+
+
+_BUTTON_NAMES = (
+    "delay_start",
+    "power",
+    "start_pause",
+    "dryness_down",
+    "dryness_up",
+    "temp_down",
+    "temp_up",
+    "wrinkle_guard",
+)
+
+#: Centre to centre along the button row, left to right. Measured opening edge
+#: to opening edge, which is the same thing since every opening is identical.
+#:
+#: Two values recur: 16.98 between the two halves of a pair, 25.06 across a
+#: gap between groups. The remaining placeholders assume that holds, which is
+#: a guess about a pattern and not a reading.
+_BUTTON_PITCHES = (
+    20.58,  # B1 -> B2, measured
+    16.98,  # B2 -> B3, measured
+    25.06,  # B3 -> B4, measured
+    16.98,  # B4 -> B5, measured, same as B2 -> B3
+    25.06,  # B5 -> B6, PLACEHOLDER from the pattern, across to temperature
+    16.98,  # B6 -> B7, PLACEHOLDER from the pattern, within the pair
+    25.06,  # B7 -> B8, PLACEHOLDER from the pattern, across to wrinkle guard
+)
+
+_SWITCHES = tuple(
+    Switch(name, x, y) for name, x, y in _row(_BUTTON_NAMES, _BUTTON_PITCHES, 0.0)
+) + (
+    # Turned on its side and sitting down among the LEDs rather than on the
+    # button line. Same tab size as the rest. PLACEHOLDER position, and the
+    # rotation sign still needs settling: which edge is its hinge?
     Switch("keylock", 140.0, -16.0, rotation=90.0),
 )
 
@@ -180,7 +218,7 @@ class Params:
     #: Where the cluster datum (left-most tab's left edge, on the hinge line)
     #: sits in panel coordinates. Slides the whole group about without
     #: disturbing a single measurement. PLACEHOLDER.
-    cluster_x: float = 22.0  # PLACEHOLDER
+    cluster_x: float = 25.0  # PLACEHOLDER
     cluster_y: float = 55.58  # puts the hinge line 41.14 below the top, as F9
 
     # ------------------------------------------------------------------
