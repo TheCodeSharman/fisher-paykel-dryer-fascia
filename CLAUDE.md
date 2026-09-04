@@ -20,6 +20,11 @@ uv run fascia-build --variant flexure
 uv run python -m fascia.preview flexure # push to the OCP viewer
 ```
 
+In VS Code the run button on `src/fascia/preview.py` does the same thing, and
+F5 offers both variants plus the STL build. That is why `preview.py` alone uses
+absolute imports &mdash; the run button executes it as a script, not as a module,
+so relative imports fail there. Leave them absolute.
+
 Always run the build after changing geometry. A model that imports fine can
 still fail to produce a solid.
 
@@ -36,6 +41,7 @@ still fail to produce a solid.
 | `reference/measurements.md` | Caliper worksheet; the source of truth for real numbers. |
 | `labels/` | Artwork for the printed label that covers the face. |
 | `exports/` | Build output, git-ignored. |
+| `.vscode/` | Interpreter, launch configurations, extension recommendations. |
 
 ## Conventions
 
@@ -64,8 +70,23 @@ still fail to produce a solid.
 - The repo is public and deliberately so; someone else with a dying ED55/56 may
   find it. Keep the README honest about what is measured and what is guessed.
 
+## Decisions made
+
+- **`flexure` is the design being taken forward.** `separate` stays in the tree
+  as a fallback and a comparison print; do not delete it, but new work goes
+  into `flexure`.
+- **PETG on FDM.** Tougher in fatigue than PLA and happy near a warm appliance,
+  which is what the hinge needs. `hinge_thickness` of 0.8 is four layers at
+  0.2, and `flexure_slot` of 0.9 is a gap the 0.4 nozzle can bridge cleanly.
+  Both assume PETG; revisit them if the material changes.
+- **Print the panel flat, front face down.** The bed gives a smooth face for
+  the label, the plungers rise as self-supporting cylinders, and the hinge
+  bends along the layers rather than trying to peel them apart.
+
 ## State
 
-Geometry is complete and builds, but almost every dimension is still a
-placeholder. The next real step is filling in `reference/measurements.md` from
-calipers. Open questions are listed at the bottom of that file.
+Geometry is complete and builds valid solids, but almost every dimension is
+still a placeholder. The next real step is filling in
+`reference/measurements.md` from calipers, on the fascia while it is off the
+machine. Open questions are listed at the bottom of that file; the label
+orientation one is the only one that could force a geometry change.

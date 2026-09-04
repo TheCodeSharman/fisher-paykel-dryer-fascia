@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Preview: flexure",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "fascia.preview",
+      "args": ["flexure"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": false
+    },
+    {
+      "name": "Preview: separate",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "fascia.preview",
+      "args": ["separate"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": false
+    },
+    {
+      "name": "Build all STLs",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "fascia.build",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": false
+    }
+  ]
+}

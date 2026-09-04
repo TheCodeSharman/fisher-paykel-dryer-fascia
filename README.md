@@ -28,10 +28,13 @@ Two strategies, both built from the same measurements:
   like a trapdoor. A boss on the back presses the tactile switch. The printed
   label bridges the slot, sealing it and cushioning the press. This is what the
   original does; see `reference/photos/04-fascia-front-label-off.jpg`.
+  Printed in PETG, flat with the front face on the bed, so the hinge bends
+  along the layers instead of peeling them apart. This is the design being
+  taken forward.
 - **`separate`** &mdash; loose printed caps dropped through round apertures,
   each with a flange behind the panel so it cannot fall out the front. More
   parts and more tolerance-chasing, but the feel is adjustable without
-  reprinting the panel.
+  reprinting the panel. Kept as a fallback and a comparison print.
 
 ## Building
 
@@ -43,8 +46,13 @@ uv run fascia-build                    # writes exports/*.stl
 uv run fascia-build --variant flexure  # just the one
 ```
 
-To see it in the OCP CAD Viewer, open the viewer from the VS Code command
-palette, then:
+To see it in the OCP CAD Viewer: open `src/fascia/preview.py` and press the
+run button, which shows the `flexure` variant. F5 offers "Preview: flexure",
+"Preview: separate" and "Build all STLs" instead. The viewer starts itself; if
+it does not, open it from the command palette with "OCP CAD Viewer: Open
+viewer".
+
+From a terminal, the same thing:
 
 ```sh
 uv run python -m fascia.preview flexure

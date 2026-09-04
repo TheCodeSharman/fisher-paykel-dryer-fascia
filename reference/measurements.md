@@ -132,5 +132,5 @@ nothing that matters any more.
    run further along the fascia to a natural line?
 3. **Which board switch has no button** (`S1`&ndash;`S9` is nine, the label
    shows eight).
-4. **Printer and material** &mdash; the flexure hinge thickness and slot width
-   depend on both.
+4. ~~Printer and material.~~ Settled: PETG on FDM, panel printed flat with the
+   front face on the bed.
