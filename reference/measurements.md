@@ -98,19 +98,21 @@ opening's left edge to last opening's right edge, should read **156.02**.
 
 | Button | Board ref | X | Y | Rotation |
 |---|---|---|---|---|
-| delay_start | | 0.00 | 0 | all eight hinge lines confirmed colinear |
-| power | | 20.58 | 0 | |
-| start_pause | | 37.56 | 0 | |
-| dryness_down | | 62.62 | 0 | |
-| dryness_up | | 79.60 | 0 | |
-| temp_down | | 107.83 | 0 | |
-| temp_up | | 128.41 | 0 | |
-| wrinkle_guard | | 145.39 | 0 | |
+| wrinkle_guard | | 0.00 | 0 | all eight hinge lines confirmed colinear |
+| temp_up | | 20.58 | 0 | which of the pair is up is a guess |
+| temp_down | | 37.56 | 0 | |
+| dryness_up | | 62.62 | 0 | likewise |
+| dryness_down | | 79.60 | 0 | |
+| start_pause | | 107.83 | 0 | |
+| power | | 128.41 | 0 | |
+| delay_start | | 145.39 | 0 | |
 | keylock | | | | hinged on its **left** edge, the one with no slot, so the tab runs to the right |
 
-Names are read off the label photo, not measured. The 3 | 2 | 3 grouping fits
-the label if Wrinkle Guard sits alongside the Temperature pair rather than
-apart from it &mdash; worth confirming against the label fragments.
+Names confirmed against the part, and they run the opposite way to the first
+reading off the label photo. The measured 3 | 2 | 3 grouping corroborates it:
+wrinkle guard falls in with the temperature pair, and start/pause, power and
+delay start make the three at the far end. Which of each pair is up and which
+is down is still a guess, and only matters for the label artwork.
 
 The keylock sits down among the LEDs at the bottom right rather than on the
 button line, running `tab, LED, gap, 3 LEDs`. Its tab is the same size as the
@@ -285,7 +287,14 @@ nothing that matters any more.
    whether the hinge wants any relief past the tab (`hinge_band`, currently
    nothing). Print a strip of tabs at a few thicknesses and pick by feel.
 
-7. **Does the recess extend past the slot?** The model recesses the tab and its
+7. **The lip overhangs when printed.** Front face down, the lip ends up at the
+   top of the print, standing `lip_width` out beyond the walls with nothing
+   under it. Either it wants a taper down to 45 degrees so it self-supports, or
+   it gets printed with support. Support would touch the side that faces the
+   room rather than the mounting face, so it is cosmetic rather than serious.
+   Worth settling once the outline is fixed, since the lip changes with it.
+
+8. **Does the recess extend past the slot?** The model recesses the tab and its
    slot. The close-up looks like a wider rounded rectangle reaching a little
    way into the panel around each tab. If so it is presumably there so the
    label is not dragged over the slot's edge. Worth a reading of how far out it

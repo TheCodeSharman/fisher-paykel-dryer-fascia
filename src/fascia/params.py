@@ -101,15 +101,21 @@ def _row(names: tuple[str, ...], pitches: tuple[float, ...], y: float) -> tuple:
     return tuple(out)
 
 
+#: Left to right in the readable frame. Not the order first assumed from the
+#: label photo, which had it backwards. It is the measured 3 | 2 | 3 grouping
+#: that confirms this one: wrinkle guard falls in with the temperature pair,
+#: and start/pause, power and delay start make the three at the far end.
+#:
+#: Which of each pair is up and which is down is still a guess.
 _BUTTON_NAMES = (
-    "delay_start",
-    "power",
-    "start_pause",
-    "dryness_down",
-    "dryness_up",
-    "temp_down",
-    "temp_up",
     "wrinkle_guard",
+    "temp_up",
+    "temp_down",
+    "dryness_up",
+    "dryness_down",
+    "start_pause",
+    "power",
+    "delay_start",
 )
 
 #: Centre to centre along the button row, left to right. Measured opening edge
