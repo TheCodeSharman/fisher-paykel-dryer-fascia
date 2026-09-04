@@ -1,0 +1,14 @@
+# Build output — regenerate with `uv run fascia-build`
+exports/*.stl
+exports/*.step
+exports/*.3mf
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# macOS
+.DS_Store
