@@ -100,8 +100,10 @@ class Params:
     height: float = 60.0  # PLACEHOLDER
     corner_radius: float = 4.0
 
-    #: The front plate that carries the buttons, LEDs and label.
-    thickness: float = 2.4
+    #: The front plate that carries the buttons, LEDs and label. The original
+    #: measured 2.73 on its return edge; rounded up to 14 layers at 0.2 so the
+    #: slicer is not left with a part layer to fudge.
+    thickness: float = 2.8
     #: The lip that lands on the dryer skin and takes the screws.
     flange_thickness: float = 2.4
     #: Side walls of the tray, joining the front plate up to the flange.

@@ -90,18 +90,22 @@ confirm which.
 Also needed: tactile switch actuator diameter, and its travel and force if you
 can feel it, since that sets how stiff the hinge can be.
 
-## Button tabs
+## The old fascia
 
-Measure a surviving tab on the old fascia rather than guessing.
+Discarded, but it is the jig for the button and LED layout. Measure an intact
+tab near the middle, away from the cracks.
 
-| What | Value |
-|---|---|
-| Tab width | |
-| Tab height | |
-| Tab corner radius | |
-| Slot width around the tab | |
-| Panel thickness at the hinge | |
-| Tab standing proud of the face | |
+| # | What | Value | How taken |
+|---|---|---|---|
+| F3 | Face thickness | 2.73 mm | **on the wrap-around return edge, not the face.** Assumed equal to the face; confirm at the crack that runs through the face |
+| F4 | Tab width | | across the tab, inside the slot |
+| F5 | Tab height | | hinge line to the top of the tab |
+| F6 | Slot width | | the gap itself |
+| F7 | Tab corner radius | | |
+| F8 | Tab proud of the face | | up, flush or dished |
+
+Chosen for the print: front plate `thickness` 2.8, which is F3 rounded up to
+14 layers at 0.2.
 
 ## LEDs
 
