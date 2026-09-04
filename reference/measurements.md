@@ -174,9 +174,14 @@ it shares the cluster datum with `delay_start` at x = 0. Nothing else registers
 the LED row against the button row, so without this the whole row could be
 right in its spacings and still sit sideways of where it belongs.
 
-Pitches are centre to centre, taken left edge to left edge of the **hole**,
-not the counterbore around it. Same thing either way, so long as the feature
-measured is one size all along the row and is not switched partway.
+Pitches are centre to centre. Taken left edge to left edge of the **hole**,
+though the **counterbore** edge is the better datum: calipers seat against it
+properly. Either works, so long as the feature measured is one size all along
+the row and is not switched partway.
+
+For the one the keylock clips, measure **right** edges: the tab takes that
+hole's left side, but its right is intact, and right-to-right is still centre
+to centre.
 
 **The keylock gap is the tight spot.** `led09` to `led10` measures about 20.20,
 and that has to hold the keylock's tab and slot (12.97) plus half a light post
@@ -304,8 +309,11 @@ nothing that matters any more.
 8. **The right-hand LEDs hang off one uncertain reading.** `led09` to `led10`
    was taken as 20.20 and flagged a guess, because the tab clips that hole's
    left edge and there is no edge left to measure from. Everything right of it
-   inherits the error. It wants an independent tie: from the left edge of the
-   `delay_start` button opening down to `led11`, say, which is undamaged.
+   inherits the error.
+
+   Simplest fix: measure the **right** edges of the two counterbores. The clip
+   takes the left side only, so right-to-right gives the pitch cleanly and no
+   tie back to the button row is needed.
 
    The original's tab does clip that LED. Ours may not have to: the slot here
    is 1.2 against the original's 2.41, so the keylock tab spans 12.97 along x
