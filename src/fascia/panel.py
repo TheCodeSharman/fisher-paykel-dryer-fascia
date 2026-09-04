@@ -183,14 +183,14 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
 
     # Posts go on solid, then every LED is drilled through plate and post in
     # one go, so no boolean ever has to resolve two coincident cylinders.
-    for led in p.leds:
+    for led in p.placed_leds:
         post = light_post(p, led)
         if post is not None:
             part += post
-    for led in p.leds:
+    for led in p.placed_leds:
         part -= led_bezel(p, led)
 
-    for sw in p.switches:
+    for sw in p.placed_switches:
         if variant == FLEXURE:
             part -= to_plate * buttons.flexure_slot(p, sw)
             relief = buttons.flexure_hinge_relief(p, sw)
@@ -213,7 +213,7 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
 def make_caps(p: Params) -> list[Part]:
     """The loose button caps for the `separate` variant, one per switch."""
     caps = []
-    for sw in p.switches:
+    for sw in p.placed_switches:
         c = Pos(0, 0, -p.reach) * buttons.cap(p, sw)
         c.label = f"button-cap-{sw.name}"
         caps.append(c)

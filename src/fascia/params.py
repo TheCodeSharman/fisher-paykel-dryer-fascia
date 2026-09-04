@@ -66,34 +66,41 @@ class ScrewHole:
 
 
 # ---------------------------------------------------------------------------
-# Board features, read off reference/photos/03 and 04. Names come from the
-# original printed label; positions are still PLACEHOLDER.
+# Board features, in **cluster coordinates**: x from the left edge of the
+# left-most tab, y from the button hinge line, +y up. Readings off the old
+# fascia go in here raw; `cluster_x` and `cluster_y` place the whole group on
+# the panel, so no measurement has to be converted by hand.
+#
+# The stack runs, top to bottom: hinge line, tabs hanging down from it, then
+# the LED row below them. So tabs and LEDs both sit at negative y.
+#
+# Names come from the original printed label. Positions are still PLACEHOLDER.
 # ---------------------------------------------------------------------------
 
 _SWITCHES = (
-    Switch("delay_start", 18.0, 22.0),
-    Switch("power", 36.0, 22.0),
-    Switch("start_pause", 54.0, 22.0),
-    Switch("dryness_down", 80.0, 22.0),
-    Switch("dryness_up", 98.0, 22.0),
-    Switch("temp_down", 124.0, 22.0),
-    Switch("temp_up", 142.0, 22.0),
-    Switch("wrinkle_guard", 168.0, 22.0),
+    Switch("delay_start", 2.8, 0.0),
+    Switch("power", 20.8, 0.0),
+    Switch("start_pause", 38.8, 0.0),
+    Switch("dryness_down", 64.8, 0.0),
+    Switch("dryness_up", 82.8, 0.0),
+    Switch("temp_down", 108.8, 0.0),
+    Switch("temp_up", 126.8, 0.0),
+    Switch("wrinkle_guard", 152.8, 0.0),
 )
 
 _LEDS = (
-    Led("delay_9hr", 14.0, 40.0),
-    Led("delay_6hr", 21.0, 40.0),
-    Led("delay_3hr", 28.0, 40.0),
-    Led("keylock", 40.0, 40.0),
-    Led("power", 54.0, 40.0),
-    Led("dry_timed", 70.0, 40.0),
-    Led("dry_light", 84.0, 40.0),
-    Led("dry_extra", 98.0, 40.0),
-    Led("temp_airing", 116.0, 40.0),
-    Led("temp_low", 130.0, 40.0),
-    Led("temp_reg", 144.0, 40.0),
-    Led("wrinkle_guard", 168.0, 40.0),
+    Led("delay_9hr", -1.0, -16.0),
+    Led("delay_6hr", 6.0, -16.0),
+    Led("delay_3hr", 13.0, -16.0),
+    Led("keylock", 25.0, -16.0),
+    Led("power", 38.0, -16.0),
+    Led("dry_timed", 55.0, -16.0),
+    Led("dry_light", 69.0, -16.0),
+    Led("dry_extra", 83.0, -16.0),
+    Led("temp_airing", 101.0, -16.0),
+    Led("temp_low", 115.0, -16.0),
+    Led("temp_reg", 129.0, -16.0),
+    Led("wrinkle_guard", 152.8, -16.0),
 )
 
 
@@ -159,6 +166,12 @@ class Params:
     # ------------------------------------------------------------------
     switches: tuple[Switch, ...] = field(default_factory=lambda: _SWITCHES)
     leds: tuple[Led, ...] = field(default_factory=lambda: _LEDS)
+
+    #: Where the cluster datum (left-most tab's left edge, on the hinge line)
+    #: sits in panel coordinates. Slides the whole group about without
+    #: disturbing a single measurement. PLACEHOLDER.
+    cluster_x: float = 12.0
+    cluster_y: float = 46.0
 
     # ------------------------------------------------------------------
     # LED bezels and light tunnels
@@ -231,6 +244,22 @@ class Params:
     @property
     def body_height(self) -> float:
         return self.height - 2 * self.body_inset
+
+    @property
+    def placed_switches(self) -> tuple[Switch, ...]:
+        """The switches in panel coordinates rather than cluster coordinates."""
+        return tuple(
+            Switch(s.name, s.x + self.cluster_x, s.y + self.cluster_y)
+            for s in self.switches
+        )
+
+    @property
+    def placed_leds(self) -> tuple[Led, ...]:
+        """The LEDs in panel coordinates rather than cluster coordinates."""
+        return tuple(
+            Led(led.name, led.x + self.cluster_x, led.y + self.cluster_y, led.aperture)
+            for led in self.leds
+        )
 
     @property
     def plunger_drop(self) -> float:

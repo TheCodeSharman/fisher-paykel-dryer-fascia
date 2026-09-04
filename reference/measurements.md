@@ -104,7 +104,11 @@ tab near the middle, away from the cracks.
 | F7 | Tab corner radius | | |
 | F8 | Tab proud of the face | | up, flush or dished |
 | F9 | Hinge line to top | 41.07 mm | **confirm what "top" is** &mdash; taken as the top edge of the fascia in the same frame, i.e. 41.07 above the hinge line |
-| F10 | Hinge line to bottom edge | | the other half of the height, below the tabs |
+| F10 | Hinge line to bottom edge | | the other half of the height, below the LED row |
+
+Vertical stack in this frame, top to bottom: top of fascia, hinge line, tabs
+hanging down from it, LED row, bottom of fascia. Tabs and LEDs are both at
+negative y.
 
 Chosen for the print: front plate `thickness` 2.8, which is F3 rounded up to
 14 layers at 0.2.
@@ -142,10 +146,12 @@ nothing that matters any more.
 
 ## Open questions
 
-1. **Label orientation.** The board sits upside-down relative to its
-   silkscreen in the machine's hung position. Confirm which way the finished
-   label should read, and therefore whether the button and LED rows are
-   mirrored end-for-end relative to the board.
+1. ~~Label orientation.~~ Settled. The machine was hung the way it is to put
+   the buttons within reach, and since the cabinet is symmetric that left the
+   *original* label upside down. So the readable orientation is the flipped
+   one, which is the same frame these measurements are taken in: hinge line at
+   the top, tabs hanging down, LED row below them. Model, measurements and new
+   label artwork all share that frame, and nothing needs rotating at the end.
 2. **How much to replace.** Does the new panel stop at the board opening, or
    run further along the fascia to a natural line?
 3. **Which board switch has no button** (`S1`&ndash;`S9` is nine, the label

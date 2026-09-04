@@ -47,9 +47,17 @@ still fail to produce a solid.
 
 - **Millimetres**, always. No unit suffixes in names.
 - The dryer is wall-mounted with the fascia horizontal along the bottom of the
-  machine, and the control board sits upside-down relative to its silkscreen in
-  that position. Do not assume board designators run the same way as the
-  buttons on the label.
+  machine, hung that way to bring the buttons within reach. The cabinet is
+  symmetric, so that left the original label upside down. Everything &mdash;
+  model, measurements, new label artwork &mdash; uses the **readable** frame:
+  hinge line at the top, tabs hanging down, LED row below them. The board
+  silkscreen runs the other way; do not assume its designators follow the
+  buttons.
+- Button and LED positions are stored in **cluster coordinates** (x from the
+  left-most tab's left edge, y from the hinge line, both growing away from it
+  so tabs and LEDs are at negative y), and placed on the panel by `cluster_x`
+  and `cluster_y`. Caliper readings go in raw; use `placed_switches` and
+  `placed_leds` when building geometry.
 - **Coordinate system**: +X right, +Y up, +Z out of the machine towards you.
   X and Y start at the bottom-left corner of the panel outline, so feature
   positions can be taken straight off the calipers. **`z = 0` is the dryer's
