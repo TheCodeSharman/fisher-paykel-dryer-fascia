@@ -198,7 +198,29 @@ nothing that matters any more.
    turned on its side down in the LED row. All of `S1`-`S9` are used.
 4. ~~Printer and material.~~ Settled: PETG on FDM, panel printed flat with the
    front face on the bed.
-5. **The hinge does not match the original and does not look workable.**
+5. **Root fillet at the hinge, and what it means for the slot width.**
+   The original flares out with an inverse radius where the tab meets the hinge
+   line. That is stress relief: it is what stops a crack starting at the tab
+   root, so it matters more on a printed part than a moulded one.
+
+   Not modelled yet, because two readings fit the description and they build
+   differently:
+
+   a. the tab's straight sides flare outwards into the hinge line, so the slot
+      legs stop short and the tab is joined through the flare;
+   b. the slot leg's end cap itself opens out into the hinge line.
+
+   Worth a close photo of one tab root.
+
+   There is a constraint either way. A fillet tangent to both the tab side and
+   the hinge line has radius `r` and eats `2r` across the slot, so `r` cannot
+   exceed half the slot width without bridging the gap and welding the tab to
+   the panel. The original's 2.41 slot allows about 1.2; the 1.2 slot chosen
+   for printing allows only about 0.6. **So the wide slot may not be a moulding
+   artefact at all &mdash; it may be there to make room for this fillet.**
+   Reconsider `flexure_slot` once the geometry is known.
+
+6. **The hinge does not match the original and does not look workable.**
    Deferred to test prints rather than redesigned blind. What is there now is a
    band across the top of the tab, thinned from behind to `hinge_thickness`
    over `hinge_band`, which is a guess and not a copy. Worth measuring on the
@@ -206,7 +228,7 @@ nothing that matters any more.
    whether it is thinned at all or just flexes the full 2.73, and how far back
    from the slot ends the thinning runs. Print a strip of tabs at a few
    thicknesses and pick by feel.
-6. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
+7. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
    the top of the walls by `body_inset`. Depending on how deep `reach` turns
    out, that may want a taper down to 45 degrees so it self-supports. Not worth
    solving until the depth is measured.
