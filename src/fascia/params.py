@@ -4,16 +4,23 @@ Units are millimetres throughout.
 
 Coordinate system
 -----------------
-Looking at the *front* of the panel (the side you see standing at the dryer):
+Looking at the front of the panel, the side you see standing at the dryer:
 
     X  -> right
     Y  -> up
-    Z  -> out of the panel, towards you
+    Z  -> out of the machine, towards you
 
-The origin is the **bottom-left corner of the panel outline**, so every feature
-position can be taken straight off the calipers as an offset from that corner.
-z = 0 is the back face (against the control board); z = `thickness` is the
-front face the printed label is stuck to.
+X and Y have their origin at the bottom-left corner of the panel outline, so
+feature positions can be taken straight off the calipers as offsets from that
+corner.
+
+**z = 0 is the dryer's outer skin**, the surface the flange is screwed down
+onto. Everything inside the machine is negative, so the control board sits at
+negative z and `skin_to_switch` is a positive number measured inwards.
+
+The part is a tray, not a plate. It screws to holes drilled in the dryer and
+must itself span the distance down to the switches, so `reach` and
+`skin_to_switch` together decide whether the buttons touch. See `switch_gap`.
 
 Values marked PLACEHOLDER are guesses, sized so the model builds and can be
 eyeballed in the viewer. Replace them with real caliper readings and record how
@@ -30,9 +37,6 @@ class Switch:
     name: str
     x: float
     y: float
-    #: Distance from the back face of the panel to the switch actuator once the
-    #: panel is screwed in place. Sets the plunger length.
-    standoff: float = 4.0
 
 
 @dataclass(frozen=True)
@@ -48,6 +52,8 @@ class Led:
 
 @dataclass(frozen=True)
 class ScrewHole:
+    """A hole through the flange, into a hole drilled in the dryer."""
+
     name: str
     x: float
     y: float
@@ -88,29 +94,55 @@ _LEDS = (
 @dataclass(frozen=True)
 class Params:
     # ------------------------------------------------------------------
-    # Panel outline
+    # Outline. The flange footprint is what you see from outside.
     # ------------------------------------------------------------------
     width: float = 190.0  # PLACEHOLDER
     height: float = 60.0  # PLACEHOLDER
-    thickness: float = 2.4  # PLACEHOLDER
     corner_radius: float = 4.0
 
-    # Shallow recess in the front face that the printed label drops into, so
-    # the label sits flush instead of proud. Set depth to 0.0 to omit it.
-    label_recess_depth: float = 0.4
-    label_recess_margin: float = 3.0  # border of bare plastic around the label
+    #: The front plate that carries the buttons, LEDs and label.
+    thickness: float = 2.4
+    #: The lip that lands on the dryer skin and takes the screws.
+    flange_thickness: float = 2.4
+    #: Side walls of the tray, joining the front plate up to the flange.
+    wall: float = 2.0
+    #: How far the tray body sits inside the flange edge, leaving a landing
+    #: strip of flange around it for the screws.
+    body_inset: float = 10.0
 
     # ------------------------------------------------------------------
-    # Fasteners: self-tappers through the new panel into the old fascia
+    # Depth. The chain that decides whether the buttons reach the switches.
+    #
+    #   skin_to_switch   how far the switch tops are below the dryer skin
+    #   reach            how far the front plate sits below the dryer skin
+    #   switch_gap       what is left for the plunger  (= the difference)
+    #
+    # `reach` is ours to choose; `skin_to_switch` has to be measured on the
+    # machine with the board in place.
+    # ------------------------------------------------------------------
+    skin_to_switch: float = 18.0  # PLACEHOLDER
+    skin_to_led: float = 20.0  # PLACEHOLDER
+    reach: float = 12.0  # PLACEHOLDER
+
+    # ------------------------------------------------------------------
+    # Label
+    # ------------------------------------------------------------------
+    #: Shallow recess in the front face so the printed label sits flush.
+    #: Set to 0.0 to omit it.
+    label_recess_depth: float = 0.4
+    label_recess_margin: float = 2.0  # bare plastic left inside the well
+
+    # ------------------------------------------------------------------
+    # Fasteners: through the flange into holes drilled in the dryer
     # ------------------------------------------------------------------
     screw_shank: float = 3.4  # clearance hole for an M3 / #6 self-tapper
     screw_head: float = 6.4  # countersunk head diameter at the front face
     screws: tuple[ScrewHole, ...] = field(
-        default_factory=lambda: (  # PLACEHOLDER positions
-            ScrewHole("bl", 8.0, 8.0),
-            ScrewHole("br", 182.0, 8.0),
-            ScrewHole("tl", 8.0, 52.0),
-            ScrewHole("tr", 182.0, 52.0),
+        default_factory=lambda: (  # PLACEHOLDER positions, must sit on the flange
+            ScrewHole("bl", 5.0, 5.0),
+            ScrewHole("br", 185.0, 5.0),
+            ScrewHole("tl", 5.0, 55.0),
+            ScrewHole("tr", 185.0, 55.0),
         )
     )
 
@@ -121,56 +153,50 @@ class Params:
     leds: tuple[Led, ...] = field(default_factory=lambda: _LEDS)
 
     # ------------------------------------------------------------------
-    # LED bezels
+    # LED bezels and light tunnels
+    #
+    # Once the front plate stands off the board, light from one LED will wash
+    # into its neighbours' apertures. A tube per LED, dropping from the back of
+    # the front plate down towards the board, keeps them separate.
     # ------------------------------------------------------------------
-    #: Front-face chamfer around each aperture, so the light spreads and the
-    #: hole does not look like a raw drilling.
     led_chamfer: float = 0.6
-    #: The bore is opened out behind the aperture to clear the LED body.
     led_body_bore: float = 5.2
-    #: Material left at the aperture. The rest of the thickness is bored out.
     led_aperture_land: float = 0.8
+    tunnel_wall: float = 1.0
+    #: Clearance left between the end of a tunnel and the tip of its LED.
+    tunnel_gap: float = 1.5
 
     # ------------------------------------------------------------------
     # Buttons: shared
     # ------------------------------------------------------------------
     button_width: float = 11.0  # PLACEHOLDER
     button_height: float = 13.0  # PLACEHOLDER
-    button_radius: float = 4.0  # corner radius of the button outline
+    button_radius: float = 4.0
     #: Boss on the back of the button that reaches down to the switch.
     plunger: float = 4.0
     #: Gap left between the plunger tip and the switch actuator at rest, so the
-    #: panel does not hold the switches half-pressed. Subtracted from standoff.
+    #: panel does not hold the switches half-pressed.
     pre_travel: float = 0.5
 
     # ------------------------------------------------------------------
-    # Buttons: "flexure" variant, which replicates the original F&P design.
+    # Buttons: "flexure" variant, replicating the original F&P design.
     #
     # A tab is cut free on three sides by an inverted-U slot and stays joined
     # along its bottom edge, so it swings like a trapdoor. The printed label
     # bridges the slot and doubles as the seal and the cushion.
     # ------------------------------------------------------------------
-    #: Width of the slot cut around the tab. Must clear the nozzle comfortably.
     flexure_slot: float = 0.9
-    #: The hinge is thinned from the back over this band so the tab swings
-    #: without the whole panel flexing with it.
     hinge_band: float = 2.0
     hinge_thickness: float = 0.8
-    #: How far the tab stands proud of the front face, giving a bump to find
-    #: under the label. 0.0 leaves it flush, as the original is.
     flexure_pad_rise: float = 0.6
-    #: The raised pad is inset from the tab outline so the slot stays clear.
     flexure_pad_inset: float = 1.0
 
     # ------------------------------------------------------------------
     # Buttons: "separate" variant, loose printed caps in through-apertures
     # ------------------------------------------------------------------
-    #: Gap between the cap and the aperture it slides in. Tune to your printer.
     cap_clearance: float = 0.35
-    #: Flange behind the panel that stops the cap falling out the front.
     cap_flange_width: float = 2.0
     cap_flange_thickness: float = 1.2
-    #: How far the cap stands proud of the front face at rest.
     cap_rise: float = 1.5
 
     # ------------------------------------------------------------------
@@ -178,6 +204,35 @@ class Params:
     # ------------------------------------------------------------------
     nozzle: float = 0.4
     layer_height: float = 0.2
+
+    # ------------------------------------------------------------------
+    # Derived
+    # ------------------------------------------------------------------
+    @property
+    def body_width(self) -> float:
+        return self.width - 2 * self.body_inset
+
+    @property
+    def body_height(self) -> float:
+        return self.height - 2 * self.body_inset
+
+    @property
+    def switch_gap(self) -> float:
+        """Clear distance from the back of the front plate to the switch tops.
+
+        The single number that decides whether the buttons work. The plunger
+        fills all but `pre_travel` of it.
+        """
+        return self.skin_to_switch - self.reach
+
+    @property
+    def plunger_length(self) -> float:
+        return self.switch_gap - self.pre_travel
+
+    @property
+    def tunnel_length(self) -> float:
+        """How far a light tunnel drops before it reaches its LED."""
+        return self.skin_to_led - self.reach - self.tunnel_gap
 
 
 DEFAULT = Params()

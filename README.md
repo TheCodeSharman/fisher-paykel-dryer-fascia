@@ -4,8 +4,27 @@ A 3D-printable replacement for the control-panel section of the fascia on an
 old Fisher & Paykel wall-mounted dryer. The original moulding went brittle and
 broke away around the buttons, leaving the control board open to the room.
 
-This replaces **only the strip around the control board**, not the whole
-fascia. The new panel screws into what is left of the original.
+The original fascia is being discarded, not repaired. This part covers the
+control board and **screws straight to holes drilled in the dryer's skin**, so
+it has to span the distance down to the board itself. It is a shallow tray
+rather than a flat plate:
+
+```
+flange  -----____                    ____-----   z = 0, on the dryer skin
+                 |                  |
+                 | wall             | wall
+                 |__________________|
+                    front plate                  z = -reach
+```
+
+The flange lands on the skin and takes the screws; the walls carry the front
+plate down into the machine by `reach`, leaving `switch_gap` for the plungers
+to cross. Get that one number wrong and the buttons either miss the switches or
+hold them permanently pressed, so it is the measurement to take most carefully.
+
+Because the front plate now stands off the board, each LED gets a light tunnel
+dropping towards it. Without them the LEDs wash into each other's apertures
+across the gap.
 
 | | |
 |---|---|

@@ -35,20 +35,27 @@ _BOTTOM = (Align.CENTER, Align.CENTER, Align.MIN)
 _TOP = (Align.CENTER, Align.CENTER, Align.MAX)
 
 
-def plunger(p: Params, sw: Switch, deduct: float = 0.0) -> Part:
-    """The boss reaching from the back of the panel towards the switch.
+def plunger(p: Params, deduct: float = 0.0, overlap: float = 0.0) -> Part:
+    """The boss reaching from the back of the front plate towards a switch.
 
-    `deduct` accounts for anything already standing between the back face and
-    the start of the boss, such as a button cap's flange.
+    Its free length comes from the depth chain in `Params`: whatever
+    `switch_gap` leaves once `pre_travel` and `deduct` are taken out. `deduct`
+    accounts for anything standing between the plate and the start of the boss,
+    such as a button cap's flange.
+
+    `overlap` extends the boss further back into the part it grows from, so the
+    two share solid material rather than meeting on a single coincident face.
+    Touching faces make for fragile booleans and multi-body STLs.
     """
-    length = sw.standoff - p.pre_travel - deduct
+    length = p.plunger_length - deduct
     if length <= 0:
         raise ValueError(
-            f"switch {sw.name!r}: a standoff of {sw.standoff} leaves no room for "
-            f"a plunger once {p.pre_travel} of pre-travel and {deduct} of "
-            f"anything else are taken out"
+            f"a switch_gap of {p.switch_gap} (skin_to_switch {p.skin_to_switch} "
+            f"less reach {p.reach}) leaves no room for a plunger once "
+            f"{p.pre_travel} of pre-travel and {deduct} of anything else are "
+            f"taken out. Either reach less deep or check the measurements."
         )
-    return Cylinder(p.plunger / 2, length, align=_TOP)
+    return Cylinder(p.plunger / 2, length + overlap, align=_TOP)
 
 
 # ---------------------------------------------------------------------------
@@ -124,7 +131,7 @@ def cap(p: Params, sw: Switch) -> Part:
     shaft = fillet(top, radius=0.5)
 
     boss = Pos(0, 0, -p.cap_flange_thickness) * plunger(
-        p, sw, deduct=p.cap_flange_thickness
+        p, deduct=p.cap_flange_thickness
     )
 
     return Pos(sw.x, sw.y, 0) * (flange + shaft + boss)

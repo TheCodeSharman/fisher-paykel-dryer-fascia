@@ -50,10 +50,22 @@ still fail to produce a solid.
   machine, and the control board sits upside-down relative to its silkscreen in
   that position. Do not assume board designators run the same way as the
   buttons on the label.
-- **Coordinate system**: origin at the bottom-left corner of the panel outline
-  seen from the front; +X right, +Y up, +Z out of the front face. `z = 0` is
-  the back face, `z = thickness` the front. Feature positions are offsets from
-  that corner so they can be taken straight off the calipers.
+- **Coordinate system**: +X right, +Y up, +Z out of the machine towards you.
+  X and Y start at the bottom-left corner of the panel outline, so feature
+  positions can be taken straight off the calipers. **`z = 0` is the dryer's
+  outer skin**, the surface the flange screws down onto, so everything inside
+  the machine is negative and the front plate sits at `z = -reach`.
+- The part is a **tray, not a plate**: the original fascia is discarded and this
+  screws directly to the dryer, so it spans the depth down to the board itself.
+  `switch_gap` (`skin_to_switch - reach`) is the number that decides whether the
+  buttons work; `make_panel` refuses to build if it goes non-positive.
+- Features in the front plate are modelled in **plate-local** coordinates, where
+  `z` runs `0` to `thickness`, then translated by `Pos(0, 0, -reach)`. Keep new
+  front-plate features in that convention.
+- **Never let added geometry merely touch the part it grows from.** Plungers and
+  light posts overlap into the plate, and posts are added solid and drilled
+  afterwards. Coincident faces give fragile booleans and multi-body STLs; the
+  build prints the solid count, which must stay 1.
 - Dimensions that have not been measured yet are marked `PLACEHOLDER` in
   `params.py`. Do not quietly drop that marker &mdash; it is how we tell a real
   reading from a guess. When a real measurement arrives, remove the marker and
