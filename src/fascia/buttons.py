@@ -160,17 +160,21 @@ def flexure_relief(p: Params, sw: Switch) -> Part | None:
     if depth <= 0:
         return None
 
-    # Out to the slot's outer edge, which is the tab and nothing else, then on
-    # past the hinge line by `hinge_band` to give the bend somewhere to happen.
+    # Out to the slot's outer edge, which is the tab and nothing else. Past
+    # the hinge line the panel is left at full thickness so it holds still.
     region = _tab_outline(p, grow=p.flexure_slot)
-    band = Pos(0, p.hinge_band / 2) * Rectangle(
-        p.button_width + 2 * p.flexure_slot, p.hinge_band
-    )
-    relief = extrude(region + band, depth)
+    if p.hinge_band > 0:
+        region += Pos(0, p.hinge_band / 2) * Rectangle(
+            p.button_width + 2 * p.flexure_slot, p.hinge_band
+        )
 
-    if p.hinge_gauge < p.tab_thickness:
-        deeper = extrude(band, p.thickness - p.hinge_gauge)
-        relief += deeper
+    relief = extrude(region, depth)
+
+    if p.hinge_band > 0 and p.hinge_gauge < p.tab_thickness:
+        band = Pos(0, p.hinge_band / 2) * Rectangle(
+            p.button_width + 2 * p.flexure_slot, p.hinge_band
+        )
+        relief += extrude(band, p.thickness - p.hinge_gauge)
 
     return _place(sw) * relief
 

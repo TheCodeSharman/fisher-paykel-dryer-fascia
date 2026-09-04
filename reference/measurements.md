@@ -199,8 +199,15 @@ Also needed: LED body diameter, and how far the LED tips stand above the board.
   sits proud by. The 18 placeholder is very likely far too big, which would
   make the current 17.5 plunger nonsense. One to settle in round 3 before
   anything is printed.
-- Small triangular ribs sit on the back below each tab. Purpose unclear; travel
-  stops, or moulding. Worth a thought before they are dismissed.
+- A raised feature runs across the back near the hinge line, reading as a small
+  triangle at each tab but apparently continuous left to right. **Not
+  modelled**, and no purpose assumed: a continuous rib is more likely
+  stiffening or a moulding flow feature than anything per-button, and inventing
+  a function for it would only put geometry in the way. Worth another look if
+  the tabs misbehave.
+
+  It does say one thing clearly though: the original leaves the panel *full
+  thickness* past the hinge, where the model had been thinning it.
 
 ## Other features in the old fascia
 

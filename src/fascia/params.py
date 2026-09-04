@@ -319,7 +319,13 @@ class Params:
     #: pocket rather than an unsupported annulus hanging off the bump.
     tab_thickness: float = 1.0
     #: How far the thinning runs past the hinge line into the panel.
-    hinge_band: float = 2.0
+    #:
+    #: Zero: the relief stops at the hinge. Carrying it into the panel thins
+    #: the very material that has to hold the hinge still, so the panel flexes
+    #: along with the tab and the press goes soft. The original does the
+    #: opposite and leaves that area full thickness. Kept as a knob because a
+    #: little relief may yet prove to soften the action usefully.
+    hinge_band: float = 0.0
     #: Thickness across the hinge band itself. None keeps it the same as the
     #: tab, which is what the original does. Thinner is a softer action, and is
     #: the first knob to turn if the test prints feel stiff.
