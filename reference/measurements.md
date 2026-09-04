@@ -174,8 +174,9 @@ it shares the cluster datum with `delay_start` at x = 0. Nothing else registers
 the LED row against the button row, so without this the whole row could be
 right in its spacings and still sit sideways of where it belongs.
 
-Pitches are centre to centre, measured left edge to left edge, which is the
-same thing only while every hole is one diameter.
+Pitches are centre to centre, taken left edge to left edge of the **hole**,
+not the counterbore around it. Same thing either way, so long as the feature
+measured is one size all along the row and is not switched partway.
 
 **The keylock gap is the tight spot.** `led09` to `led10` measures about 20.20,
 and that has to hold the keylock's tab and slot (12.97) plus half a light post
