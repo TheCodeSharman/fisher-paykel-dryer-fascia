@@ -199,7 +199,8 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
             pad = buttons.flexure_pad(p, sw)
             if pad is not None:
                 part += to_plate * pad
-            part += Pos(sw.x, sw.y, -p.reach + p.thickness) * buttons.plunger(
+            at = buttons.switch_point(p, sw)
+            part += at * Pos(0, 0, -p.reach + p.thickness) * buttons.plunger(
                 p, overlap=p.thickness
             )
         else:

@@ -32,7 +32,13 @@ from dataclasses import dataclass, field
 
 @dataclass(frozen=True)
 class Switch:
-    """A tactile switch on the control board that a button has to press."""
+    """A button, positioned by the hinge line of its tab.
+
+    `y` is the **hinge line**, not the tab centre and not the switch itself.
+    The tab hangs down from there, matching the original, and the actuator sits
+    `plunger_drop` below it. Measuring the hinge line is what the old fascia
+    makes easy, so that is what the model asks for.
+    """
 
     name: str
     x: float
@@ -172,7 +178,7 @@ class Params:
     # Buttons: shared
     # ------------------------------------------------------------------
     button_width: float = 5.63  # measured, F4
-    button_height: float = 13.0  # PLACEHOLDER
+    button_height: float = 10.57  # measured, F5
     #: The tabs look like arches, so this is provisionally half the width, a
     #: semicircular top. PLACEHOLDER until F7.
     button_radius: float = 2.8
@@ -183,6 +189,10 @@ class Params:
     #: Gap left between the plunger tip and the switch actuator at rest, so the
     #: panel does not hold the switches half-pressed.
     pre_travel: float = 0.5
+    #: How far below the hinge line the plunger sits. Further down means more
+    #: leverage and a lighter press. None puts it at the middle of the tab.
+    #: PLACEHOLDER until the actuator position under the tab is known.
+    plunger_offset: float | None = None
 
     # ------------------------------------------------------------------
     # Buttons: "flexure" variant, replicating the original F&P design.
@@ -221,6 +231,13 @@ class Params:
     @property
     def body_height(self) -> float:
         return self.height - 2 * self.body_inset
+
+    @property
+    def plunger_drop(self) -> float:
+        """Distance from the hinge line down to the plunger centre."""
+        if self.plunger_offset is not None:
+            return self.plunger_offset
+        return self.button_height / 2
 
     @property
     def switch_gap(self) -> float:

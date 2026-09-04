@@ -82,22 +82,40 @@ def _tab_outline(p: Params, grow: float = 0.0) -> Sketch:
     return RectangleRounded(width, height, max(radius, 0.01))
 
 
-def flexure_slot(p: Params, sw: Switch) -> Part:
-    """The inverted-U slot that frees the tab on its left, top and right.
+def _tab_at(p: Params, grow: float = 0.0) -> Sketch:
+    """The tab profile placed relative to its hinge line, which is at y = 0.
 
-    The ring of material between the tab and the panel is trimmed back to the
-    hinge line, so the bottom edge stays joined.
+    The tab hangs *down* from the hinge, matching the original, so it occupies
+    negative y. Growing the outline pushes it above the hinge line too; the
+    slot trims that part off.
+    """
+    return Pos(0, -p.button_height / 2) * _tab_outline(p, grow)
+
+
+def switch_point(p: Params, sw: Switch) -> Pos:
+    """Where the plunger lands: below the hinge line by `plunger_drop`.
+
+    Not the same as the tab centre in general. How far the actuator sits from
+    the hinge sets the leverage, so it is a parameter rather than an assumption.
+    """
+    return Pos(sw.x, sw.y - p.plunger_drop, 0)
+
+
+def flexure_slot(p: Params, sw: Switch) -> Part:
+    """The U-shaped slot that frees the tab on its left, bottom and right.
+
+    The ring of material around the tab is trimmed back to the hinge line, so
+    the top edge stays joined and the tab swings from there.
     """
     s = p.flexure_slot
-    ring = _tab_outline(p, grow=s) - _tab_outline(p)
+    ring = _tab_at(p, grow=s) - _tab_at(p)
 
-    # Keep only the part of the ring at or above the hinge line, which sits at
-    # the bottom edge of the tab.
-    above_hinge = Pos(0, s / 2) * Rectangle(
+    # Keep only the part of the ring at or below the hinge line at y = 0.
+    below_hinge = Pos(0, -(p.button_height + s) / 2) * Rectangle(
         p.button_width + 2 * s + 2, p.button_height + s
     )
 
-    solid = extrude(ring & above_hinge, p.thickness + 2)
+    solid = extrude(ring & below_hinge, p.thickness + 2)
     return Pos(sw.x, sw.y, -1) * solid
 
 
@@ -107,14 +125,14 @@ def flexure_hinge_relief(p: Params, sw: Switch) -> Part | None:
     if depth <= 0:
         return None
     relief = Box(p.button_width, p.hinge_band, depth, align=_BOTTOM)
-    return Pos(sw.x, sw.y - p.button_height / 2, 0) * relief
+    return Pos(sw.x, sw.y, 0) * relief
 
 
 def flexure_pad(p: Params, sw: Switch) -> Part | None:
     """Bump raised on the tab so the button can be found through the label."""
     if p.flexure_pad_rise <= 0:
         return None
-    pad = extrude(_tab_outline(p, grow=-p.flexure_pad_inset), p.flexure_pad_rise)
+    pad = extrude(_tab_at(p, grow=-p.flexure_pad_inset), p.flexure_pad_rise)
     pad = fillet(
         pad.edges().group_by(Axis.Z)[-1], radius=min(0.4, p.flexure_pad_rise / 2.5)
     )
@@ -129,7 +147,8 @@ def flexure_pad(p: Params, sw: Switch) -> Part | None:
 def cap_aperture(p: Params, sw: Switch) -> Part:
     """Through-hole in the panel that a loose cap slides in."""
     bore = p.button_width + 2 * p.cap_clearance
-    return Pos(sw.x, sw.y, -1) * Cylinder(bore / 2, p.thickness + 2, align=_BOTTOM)
+    at = switch_point(p, sw)
+    return at * Pos(0, 0, -1) * Cylinder(bore / 2, p.thickness + 2, align=_BOTTOM)
 
 
 def cap(p: Params, sw: Switch) -> Part:
@@ -145,4 +164,4 @@ def cap(p: Params, sw: Switch) -> Part:
         p, deduct=p.cap_flange_thickness
     )
 
-    return Pos(sw.x, sw.y, 0) * (flange + shaft + boss)
+    return switch_point(p, sw) * (flange + shaft + boss)

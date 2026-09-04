@@ -99,10 +99,12 @@ tab near the middle, away from the cracks.
 |---|---|---|---|
 | F3 | Face thickness | 2.73 mm | **on the wrap-around return edge, not the face.** Assumed equal to the face; confirm at the crack that runs through the face |
 | F4 | Tab width | 5.63 mm | across the tab, inside the slot |
-| F5 | Tab height | | hinge line to the top of the tab |
+| F5 | Tab height | 10.57 mm | hinge line to the free end. **The hinge is at the top and the tab hangs down**, so the tab occupies negative Y |
 | F6 | Slot width | | the gap itself |
 | F7 | Tab corner radius | | |
 | F8 | Tab proud of the face | | up, flush or dished |
+| F9 | Hinge line to top | 41.07 mm | **confirm what "top" is** &mdash; taken as the top edge of the fascia in the same frame, i.e. 41.07 above the hinge line |
+| F10 | Hinge line to bottom edge | | the other half of the height, below the tabs |
 
 Chosen for the print: front plate `thickness` 2.8, which is F3 rounded up to
 14 layers at 0.2.
