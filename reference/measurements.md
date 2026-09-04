@@ -79,17 +79,38 @@ confirm which.
 Nine buttons, so every board switch `S1`-`S9` is brought out after all. X is
 the tab centre, Y the hinge line, both in cluster coordinates.
 
+Positions come from centre-to-centre pitches, measured opening edge to
+opening edge along the row, since it is longer than a caliper.
+
+| Pitch | Value | |
+|---|---|---|
+| B1 -> B2 | 20.58 | |
+| B2 -> B3 | 16.98 | |
+| B3 -> B4 | 25.06 | **group gap** |
+| B4 -> B5 | 16.98 | |
+| B5 -> B6 | 28.23 | **group gap** |
+| B6 -> B7 | 20.58 | |
+| B7 -> B8 | 16.98 | |
+
+So the row groups **3 | 2 | 3** and spans 145.39 centre to centre. The first
+and last groups share their internal spacing exactly. Cross-check G, first
+opening's left edge to last opening's right edge, should read **156.02**.
+
 | Button | Board ref | X | Y | Rotation |
 |---|---|---|---|---|
-| delay_start | | | 0 | |
-| power | | | 0 | |
-| start_pause | | | 0 | |
-| dryness_down | | | 0 | |
-| dryness_up | | | 0 | |
-| temp_down | | | 0 | |
-| temp_up | | | 0 | |
-| wrinkle_guard | | | 0 | |
+| delay_start | | 0.00 | 0 | |
+| power | | 20.58 | 0 | |
+| start_pause | | 37.56 | 0 | |
+| dryness_down | | 62.62 | 0 | |
+| dryness_up | | 79.60 | 0 | |
+| temp_down | | 107.83 | 0 | |
+| temp_up | | 128.41 | 0 | |
+| wrinkle_guard | | 145.39 | 0 | |
 | keylock | | | | turned on its side; **which edge is the hinge?** |
+
+Names are read off the label photo, not measured. The 3 | 2 | 3 grouping fits
+the label if Wrinkle Guard sits alongside the Temperature pair rather than
+apart from it &mdash; worth confirming against the label fragments.
 
 The keylock sits down among the LEDs at the bottom right rather than on the
 button line, running `tab, LED, gap, 3 LEDs`. Its tab is the same size as the

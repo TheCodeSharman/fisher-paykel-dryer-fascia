@@ -111,17 +111,21 @@ _BUTTON_NAMES = (
 #: Centre to centre along the button row, left to right. Measured opening edge
 #: to opening edge, which is the same thing since every opening is identical.
 #:
-#: Two values recur: 16.98 between the two halves of a pair, 25.06 across a
-#: gap between groups. The remaining placeholders assume that holds, which is
-#: a guess about a pattern and not a reading.
+#: All measured. The two large values are the gaps between groups, so the row
+#: runs 3 | 2 | 3, not the 3/2/2/1 the label photo suggested. The outer groups
+#: share their internal spacing exactly, 20.58 then 16.98, which is a good sign
+#: the readings are sound.
+#:
+#: The names below remain the weaker part of this: the positions are measured,
+#: which button sits at each is read off a photo.
 _BUTTON_PITCHES = (
     20.58,  # B1 -> B2, measured
     16.98,  # B2 -> B3, measured
     25.06,  # B3 -> B4, measured
     16.98,  # B4 -> B5, measured, same as B2 -> B3
-    25.06,  # B5 -> B6, PLACEHOLDER from the pattern, across to temperature
-    16.98,  # B6 -> B7, PLACEHOLDER from the pattern, within the pair
-    25.06,  # B7 -> B8, PLACEHOLDER from the pattern, across to wrinkle guard
+    28.23,  # B5 -> B6, measured, across to temperature
+    20.58,  # B6 -> B7, measured, same as B1 -> B2
+    16.98,  # B7 -> B8, measured, same as B2 -> B3
 )
 
 _SWITCHES = tuple(
