@@ -7,7 +7,7 @@
 import argparse
 from pathlib import Path
 
-from build123d import Part, Pos, export_stl
+from build123d import Part, Pos, Rotation, export_stl
 
 from .panel import FLEXURE, SEPARATE, VARIANTS, make_caps, make_panel
 from .params import DEFAULT, Params
@@ -16,8 +16,16 @@ EXPORTS = Path(__file__).resolve().parents[2] / "exports"
 
 
 def _on_the_bed(part: Part) -> Part:
-    """Drop a part so its lowest point sits on z = 0, ready to slice."""
-    return Pos(0, 0, -part.bounding_box().min.Z) * part
+    """Turn a part front face down and sit it on z = 0, ready to slice.
+
+    Front face down is the orientation the panel is designed around: the bed
+    gives a smooth face for the label, the plungers and light posts rise as
+    self-supporting cylinders, and the hinge bends along the layers rather than
+    trying to peel them apart. Exports come out that way so it is not a step
+    anyone has to remember.
+    """
+    flipped = Rotation(180, 0, 0) * part
+    return Pos(0, 0, -flipped.bounding_box().min.Z) * flipped
 
 
 def _write(part: Part, path: Path, tolerance: float) -> None:

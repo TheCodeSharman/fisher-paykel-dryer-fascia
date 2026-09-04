@@ -105,8 +105,18 @@ still fail to produce a solid.
   0.2, and `flexure_slot` of 0.9 is a gap the 0.4 nozzle can bridge cleanly.
   Both assume PETG; revisit them if the material changes.
 - **Print the panel flat, front face down.** The bed gives a smooth face for
-  the label, the plungers rise as self-supporting cylinders, and the hinge
-  bends along the layers rather than trying to peel them apart.
+  the label, the plungers and light posts rise as self-supporting cylinders,
+  and the hinge bends along the layers rather than trying to peel them apart.
+  `fascia-build` exports already turned that way up, so it is not a step
+  anyone has to remember.
+- That orientation constrains the front face: **nothing may stand proud of it,
+  and no broad shallow pocket may be cut into it.** A pocket leaves the first
+  layers as its border alone and asks the whole area to bridge in one go, which
+  is what retired `label_recess_depth`. The tab recess is fine because it is
+  small and lands on the bump at its far end.
+- The tab is recessed from the *front* to `tab_thickness` and left flush with
+  the panel on the back, as the original is. The bump is not added on top; it
+  is what remains when the recess is cut around it.
 
 ## State
 

@@ -145,16 +145,21 @@ def flexure_slot(p: Params, sw: Switch) -> Part:
 
 
 def flexure_relief(p: Params, sw: Switch) -> Part | None:
-    """Thin the tab and its hinge, taken from the back face.
+    """Recess the tab from the *front*, leaving the bump standing at the face.
 
-    The whole tab is thinned, not just a band across the hinge. That is what
-    makes it flexible: a tab left at full panel thickness barely bends at all
-    and forces every bit of movement into whatever line was thinned, which is
-    where it would eventually crack.
+    Two jobs at once. It thins the tab to `tab_thickness` so it can bend at all
+    -- a tab at full panel thickness barely moves and forces everything into
+    whatever line was thinned, which is where it would crack. And it drops the
+    tab's face below the panel's, so the label spans the recess and touches
+    only the panel and the bump. Bonded flat across the whole tab, the
+    adhesive would fight the tab every press and tear along the slot.
 
-    Cut from the back, so the front face stays flat for the label. The original
-    recesses the front instead and stands a bump back up out of it, which is
-    the same mechanics but would print as an unsupported ring.
+    The bump is not added: it is what is left behind when the recess is cut
+    around it, so it cannot drift out of register with the tab.
+
+    Prints face down. The tab flat is anchored at the hinge and lands on the
+    bump, so it bridges a few mm between two supported points rather than
+    hanging unsupported off the bump.
     """
     depth = p.thickness - p.tab_thickness
     if depth <= 0:
@@ -168,24 +173,26 @@ def flexure_relief(p: Params, sw: Switch) -> Part | None:
             p.button_width + 2 * p.flexure_slot, p.hinge_band
         )
 
-    relief = extrude(region, depth)
+    region -= Pos(0, -p.plunger_drop) * Circle(p.pad_diameter / 2)
+    relief = Pos(0, 0, p.tab_thickness) * extrude(region, depth)
 
     if p.hinge_band > 0 and p.hinge_gauge < p.tab_thickness:
         band = Pos(0, p.hinge_band / 2) * Rectangle(
             p.button_width + 2 * p.flexure_slot, p.hinge_band
         )
-        relief += extrude(band, p.thickness - p.hinge_gauge)
+        relief += Pos(0, 0, p.hinge_gauge) * extrude(band, p.thickness - p.hinge_gauge)
 
     return _place(sw) * relief
 
 
 def flexure_pad(p: Params, sw: Switch) -> Part | None:
-    """Bump raised on the tab so the button can be found through the label.
+    """Extra height on the bump, standing it proud of the panel face.
 
-    None by default: the original is flush and the front face prints on the
-    bed, so a proud pad would have to print below it. Kept because raising it
-    is the obvious thing to try if the buttons prove hard to find by feel, and
-    it only costs flipping the part in the slicer.
+    None by default. The bump already comes out flush, left standing by the
+    recess cut around it, which is what the original does. This only adds more,
+    and it cannot print with the front face on the bed, so it means flipping
+    the part in the slicer. Worth trying only if the buttons prove hard to find
+    by feel through the label.
     """
     if p.flexure_pad_rise <= 0:
         return None

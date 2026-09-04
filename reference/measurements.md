@@ -239,21 +239,19 @@ nothing that matters any more.
    So there is no fillet needing room, and no reason to widen `flexure_slot`
    back towards the original's 2.41 on that account.
 
-6. **The hinge does not match the original and does not look workable.**
-   Deferred to test prints rather than redesigned blind. What is there now is a
-   band across the top of the tab, thinned from behind to `hinge_thickness`
-   over `hinge_band`, which is a guess and not a copy. Worth measuring on the
-   original before printing: how thick the material actually is at the hinge,
-   whether it is thinned at all or just flexes the full 2.73, and how far back
-   from the slot ends the thinning runs. Print a strip of tabs at a few
-   thicknesses and pick by feel.
-7. **Shallow recess around each tab.** The close-up shows a rounded-rectangle
-   depression in the panel face containing the whole tab and its slot, with the
-   bump rising back to about face level out of it. Not modelled. Probably
-   clearance so the label is not dragged over a sharp edge as the tab moves.
-   Worth a depth reading, and a decision on whether it earns its keep once the
-   label is on.
-8. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
-   the top of the walls by `body_inset`. Depending on how deep `reach` turns
-   out, that may want a taper down to 45 degrees so it self-supports. Not worth
-   solving until the depth is measured.
+6. ~~The hinge does not match the original.~~ It now does, near enough. The
+   tab is recessed from the front to leave `tab_thickness` of material, with
+   the bump left standing at the panel face by cutting the recess around it.
+   That is the original's arrangement: a thin tab over its whole length, a boss
+   to press, and the label spanning the recess so it touches only the panel and
+   the bump.
+
+   Still to settle by test print: whether 1.0 is the right gauge in PETG, and
+   whether the hinge wants any relief past the tab (`hinge_band`, currently
+   nothing). Print a strip of tabs at a few thicknesses and pick by feel.
+
+7. **Does the recess extend past the slot?** The model recesses the tab and its
+   slot. The close-up looks like a wider rounded rectangle reaching a little
+   way into the panel around each tab. If so it is presumably there so the
+   label is not dragged over the slot's edge. Worth a reading of how far out it
+   goes, and how deep.

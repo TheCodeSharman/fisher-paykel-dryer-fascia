@@ -225,8 +225,13 @@ class Params:
     # Label
     # ------------------------------------------------------------------
     #: Shallow recess in the front face so the printed label sits flush.
-    #: Set to 0.0 to omit it.
-    label_recess_depth: float = 0.4
+    #:
+    #: Zero, and it has to be. The front face prints on the bed, so a pocket
+    #: across it would leave the first layers as nothing but the border, and
+    #: the whole label area would then try to bridge that span in one go. A
+    #: printed label is a couple of tenths thick and can simply sit proud.
+    #: Only revisit this if the part is ever printed face up.
+    label_recess_depth: float = 0.0
     label_recess_margin: float = 2.0  # bare plastic left inside the well
 
     # ------------------------------------------------------------------
@@ -314,9 +319,10 @@ class Params:
     #: tab with one thinned line across it forces all the bending into that
     #: line; the original spreads it along a thin tab.
     #:
-    #: Thinned from the *back*, where the original recesses the front. Same
-    #: mechanics, but the front stays flat for the label and it prints as a
-    #: pocket rather than an unsupported annulus hanging off the bump.
+    #: Recessed from the *front*, as the original is, so the label spans the
+    #: recess and touches only the panel face and the bump. The recess depth
+    #: falls out as `thickness - tab_thickness`, and what is left standing in
+    #: the middle is the bump.
     tab_thickness: float = 1.0
     #: How far the thinning runs past the hinge line into the panel.
     #:
