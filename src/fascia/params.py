@@ -214,8 +214,16 @@ class Params:
     # `reach` is ours to choose; `skin_to_switch` has to be measured on the
     # machine with the board in place.
     # ------------------------------------------------------------------
-    skin_to_switch: float = 18.0  # PLACEHOLDER
-    skin_to_led: float = 20.0  # PLACEHOLDER
+    #: Derived from the original rather than guessed: its prong stands 3.19
+    #: off a back face flush with the panel's, so with `pre_travel` allowed for
+    #: the switch sits 3.69 down. Holds as long as the new panel's back face
+    #: lands where the old fascia's did, which round 3 confirms on the machine.
+    skin_to_switch: float = 3.69
+    #: PLACEHOLDER, and now the odd one out. The underside photo shows the
+    #: light cups standing further off the back than the prongs do, so this
+    #: should be more than `skin_to_switch`, but by how much is unmeasured.
+    #: The equivalent reading to take is the depth of one cup.
+    skin_to_led: float = 8.0
     #: How far the plate's *back* face sits below the dryer skin. Zero lays it
     #: flat on the skin with its front face outermost, which is what the panel
     #: wants to be: nothing stands proud of the face for a finger to catch.

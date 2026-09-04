@@ -54,7 +54,7 @@ EPROM: `ED56 427318270820`.
 | Opening height | | |
 | Overlap onto sound fascia | | how far the new panel laps over the old on each side |
 | Panel thickness | | thickness of the original fascia beside the break |
-| Depth from fascia face to board | | sets `Switch.standoff` |
+| Depth from fascia face to board | | cross-check on F13, which already gives it |
 
 ## Screw positions
 
@@ -133,6 +133,8 @@ tab near the middle, away from the cracks.
 | F6 | Slot width | 2.41 mm | uniform all round, tab edge to hole edge. Cross-checked: whole opening 10.63, so ~2.50 a side. Wide because moulding needs steel there |
 | F7 | Tab end radius | semicircular | **the free end only.** The hinge end is square, the sides straight, so the slot legs run parallel up to their end caps. Derived as half the tab width |
 | F8 | Tab face | flush, with a 5.25 circle | pad flush with the panel face, tab's flat recessed around it. The pad is as wide as the tab, and sits **low on it, not centred** |
+| F13 | Prong length | 3.19 mm | how far the plunger stands off the back face. Since the tab's back is flush with the panel's, this is the whole depth chain: the switch sits 3.69 down once pre-travel is allowed |
+| F14 | Light cup depth | | the same reading for an LED tunnel. Wanted: the cups stand further off the back than the prongs, but by how much is a guess |
 | F12 | Bump height above the tab flat | 1.73 mm | so on a 2.73 panel the tab flat is about 1.0 thick. **This is the flexure**: the tab is thin over its whole length with a boss to press on, not a full-thickness slab |
 | F11 | Hinge line to pad centre | derived | the pad is as wide as the tab and sits on its semicircular free end, so it is that end cap: `button_height - tab_end_radius` = 7.695. Worth confirming |
 | F9 | Hinge line to top edge | 41.14 mm | above the hinge line |
