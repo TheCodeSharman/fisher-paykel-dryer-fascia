@@ -141,14 +141,14 @@ _LED_NAMES = tuple(f"led{i:02d}" for i in range(1, 14))
 #: Centre to centre along the row. All PLACEHOLDER: only the grouping is known,
 #: the spacings are shaped to it so the preview reads correctly.
 _LED_PITCHES = (
-    14.0,  # 1 -> group of 3
-    7.0,
-    7.0,
-    14.0,  # -> group of 4
-    7.0,
-    7.0,
-    7.0,
-    14.0,  # -> lone LED
+    19.34,  # led01 -> led02, measured, the gap after the lone first LED
+    11.54,  # led02 -> led03, measured, inside the group of three
+    11.54,  # led03 -> led04, measured, same as the last
+    16.89,  # led04 -> led05, measured, the gap across to the group of four
+    10.91,  # led05 -> led06, measured, inside the group of four
+    10.91,  # led06 -> led07, measured, same again
+    10.91,  # led07 -> led08, measured, closes the group of four
+    28.65,  # led08 -> led09, measured, the gap to the lone LED
     32.0,  # -> past the keylock tab, which needs room for its whole length
     16.0,
     10.0,  # -> the close-set three
