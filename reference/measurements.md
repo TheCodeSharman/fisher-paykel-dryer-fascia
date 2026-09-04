@@ -163,6 +163,16 @@ the grouping is not certain.
 Thirteen, grouped **1 | 3 | 4 | 1 | [keylock tab] | 1 | 3**, that last three
 very close together. Named positionally until the label mapping is confirmed.
 
+**The rows are tied**: `led01` sits on the centreline of the tab above it, so
+it shares the cluster datum with `delay_start` at x = 0. Nothing else registers
+the LED row against the button row, so without this the whole row could be
+right in its spacings and still sit sideways of where it belongs.
+
+Pitches are centre to centre, measured left edge to left edge, which is the
+same thing only while every hole is one diameter. The span from `led09` to
+`led10` is taken in two parts, either side of the keylock opening, so it gives
+the keylock's position at the same time.
+
 | LED | Board ref | Pitch from previous | Colour |
 |---|---|---|---|
 | led01 | | &mdash; | |
@@ -174,7 +184,8 @@ very close together. Named positionally until the label mapping is confirmed.
 | led07 | | | |
 | led08 | | | |
 | led09 | | | |
-| led10 | | | *past the keylock tab* |
+| *keylock* | | | *tab, not an LED* |
+| led10 | | | |
 | led11 | | | |
 | led12 | | | |
 | led13 | | | |
