@@ -181,6 +181,27 @@ very close together. Named positionally until the label mapping is confirmed.
 
 Also needed: LED body diameter, and how far the LED tips stand above the board.
 
+## What the underside shows
+
+`photos/09-fascia-underside.jpg`, and it settles a few things.
+
+- **Light tunnels are real.** The original stands a row of cups off the back,
+  one per LED, which is what the model builds. They are tapered rather than
+  straight tubes, which will be draft for the mould rather than anything
+  optical.
+- **The plunger sits on the tab's free end**, over the bump, as modelled.
+- **The plungers are ribbed, not solid.** A cross-section rather than a plain
+  post. That is a moulding requirement, keeping the wall thin so the surface
+  does not sink; printing has no such constraint and a solid cylinder is
+  stronger, so ours stays solid.
+- **The plungers are short**, a few mm at most. Since the old fascia *was* the
+  outer skin, `skin_to_switch` should be close to that plus whatever our plate
+  sits proud by. The 18 placeholder is very likely far too big, which would
+  make the current 17.5 plunger nonsense. One to settle in round 3 before
+  anything is printed.
+- Small triangular ribs sit on the back below each tab. Purpose unclear; travel
+  stops, or moulding. Worth a thought before they are dismissed.
+
 ## Other features in the old fascia
 
 The label-off photo shows features beyond the buttons and LEDs: a large round
