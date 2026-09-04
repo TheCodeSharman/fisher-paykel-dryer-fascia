@@ -182,24 +182,35 @@ the keylock can be trimmed or dropped. The span from `led09` to
 `led10` is taken in two parts, either side of the keylock opening, so it gives
 the keylock's position at the same time.
 
-| LED | Board ref | Pitch from previous | Colour |
+| LED | Pitch from previous | X | Note |
 |---|---|---|---|
-| led01 | | &mdash; | |
-| led02 | | | |
-| led03 | | | |
-| led04 | | | |
-| led05 | | | |
-| led06 | | | |
-| led07 | | | |
-| led08 | | | |
-| led09 | | | |
+| led01 | &mdash; | 0.00 | on the centreline of `delay_start` |
+| led02 | 19.34 | 19.34 | gap after the lone first LED |
+| led03 | 11.54 | 30.88 | |
+| led04 | 11.54 | 42.42 | |
+| led05 | 16.89 | 59.31 | gap |
+| led06 | 10.91 | 70.22 | |
+| led07 | 10.91 | 81.13 | |
+| led08 | 10.91 | 92.04 | |
+| led09 | 28.65 | 120.69 | gap to the lone LED |
 | *keylock* | | | *tab, not an LED* |
-| led10 | | | |
-| led11 | | | |
-| led12 | | | |
-| led13 | | | |
+| led10 | 20.20 | 140.89 | **approximate**, spans the keylock and the hole is clipped |
+| led11 | 8.44 | 149.33 | |
+| led12 | 5.98 | 154.33 | the close-set three |
+| led13 | 5.98 | 160.31 | |
 
-Also needed: LED body diameter, and how far the LED tips stand above the board.
+The row spans 160.31, running further right than the buttons' 145.39. No two
+groups share a spacing: 11.54 inside the three, 10.91 inside the four, 5.98
+inside the close-set three.
+
+Still needed: **D**, the hole diameter and whether they all match, and how far
+the LED tips stand above the board.
+
+D has become the awkward one. At a 5.98 pitch the placeholder 5.2 bore leaves
+0.78 of wall between neighbouring tunnels and their outer walls overlap by
+1.22, so the close-set three would merge into a block with three bores through
+it. That may even be acceptable, but it is not a design decision anyone has
+made, and the real diameter probably makes it moot.
 
 ## What the underside shows
 

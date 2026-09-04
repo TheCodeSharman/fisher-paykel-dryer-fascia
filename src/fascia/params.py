@@ -138,8 +138,9 @@ _SWITCHES = tuple(
 #: a photo has already produced one wrong grouping.
 _LED_NAMES = tuple(f"led{i:02d}" for i in range(1, 14))
 
-#: Centre to centre along the row. All PLACEHOLDER: only the grouping is known,
-#: the spacings are shaped to it so the preview reads correctly.
+#: Centre to centre along the row, all measured. No two groups share a
+#: spacing: 11.54 inside the three, 10.91 inside the four, 5.98 inside the
+#: close-set three at the end.
 _LED_PITCHES = (
     19.34,  # led01 -> led02, measured, the gap after the lone first LED
     11.54,  # led02 -> led03, measured, inside the group of three
@@ -151,11 +152,11 @@ _LED_PITCHES = (
     28.65,  # led08 -> led09, measured, the gap to the lone LED
     20.20,  # led09 -> led10, APPROXIMATE: spans the keylock, and the hole
             # is clipped on its left edge so the reading is a guess
-    16.0,
-    10.0,  # -> the close-set three
+    8.44,  # led10 -> led11, measured, across to the close-set three
     5.0,
-    5.0,
-)[:12]
+    5.98,  # led11 -> led12, measured, the close-set three
+    5.98,  # led12 -> led13, measured, same again
+)
 
 _LEDS = tuple(
     Led(name, x, y) for name, x, y in _row(_LED_NAMES, _LED_PITCHES, -16.0)
