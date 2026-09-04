@@ -55,8 +55,10 @@ class Led:
     name: str
     x: float
     y: float
-    #: Diameter of the light aperture at the front face.
-    aperture: float = 2.5
+    #: Diameter of the hole. Measured at 3.35, a clearance hole for a 3mm LED
+    #: rather than a small window with material left across it, so the LED sits
+    #: in the hole and the label diffuses it.
+    aperture: float = 3.35
 
 
 @dataclass(frozen=True)
@@ -132,6 +134,7 @@ _SWITCHES = tuple(
     Switch(name, x, y) for name, x, y in _row(_BUTTON_NAMES, _BUTTON_PITCHES, 0.0)
 )
 
+#: The row sits 23.29 below the button hinge line, measured.
 #: The LED row, 13 across, grouped 1 | 3 | 4 | 1 | [keylock tab] | 1 | 3, with
 #: that last three sitting very close together. Named positionally on purpose:
 #: which label belongs to which is still to be confirmed, and reading them off
@@ -159,7 +162,7 @@ _LED_PITCHES = (
 )
 
 _LEDS = tuple(
-    Led(name, x, y) for name, x, y in _row(_LED_NAMES, _LED_PITCHES, -16.0)
+    Led(name, x, y) for name, x, y in _row(_LED_NAMES, _LED_PITCHES, -23.29)
 )
 
 #: The keylock tab sits in the LED row, between the lone LED at index 8 and the
@@ -278,8 +281,6 @@ class Params:
     # the front plate down towards the board, keeps them separate.
     # ------------------------------------------------------------------
     led_chamfer: float = 0.6
-    led_body_bore: float = 5.2
-    led_aperture_land: float = 0.8
     tunnel_wall: float = 1.0
     #: Clearance left between the end of a tunnel and the tip of its LED.
     tunnel_gap: float = 1.5

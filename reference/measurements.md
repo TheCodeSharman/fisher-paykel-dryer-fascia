@@ -208,11 +208,13 @@ inside the close-set three.
 Still needed: **D**, the hole diameter and whether they all match, and how far
 the LED tips stand above the board.
 
-D has become the awkward one. At a 5.98 pitch the placeholder 5.2 bore leaves
-0.78 of wall between neighbouring tunnels and their outer walls overlap by
-1.22, so the close-set three would merge into a block with three bores through
-it. That may even be acceptable, but it is not a design decision anyone has
-made, and the real diameter probably makes it moot.
+D at 3.35 clears up both worries the placeholder had created. The close-set
+three keep 2.63 of wall between bores and their posts stay 0.63 apart, and the
+keylock has 0.94 to the nearest post instead of a hundredth.
+
+It also changes what the hole is. At 3.35 it is a clearance hole for a 3mm LED
+to sit in, so there is no window with material left across it and nothing to
+leave a land on. The bezel is now a straight bore with the front edge broken.
 
 ## What the underside shows
 

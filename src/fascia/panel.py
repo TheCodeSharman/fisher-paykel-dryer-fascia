@@ -110,12 +110,12 @@ def countersunk_hole(p: Params, hole: ScrewHole) -> Part:
 
 
 def light_post(p: Params, led: Led) -> Part | None:
-    """Solid boss below one LED aperture, drilled out by `led_bezel` later.
+    """Solid boss below one LED hole, bored out by `led_bezel` afterwards.
 
-    Once the tray stands the front plate off the board, light from one LED
-    washes into its neighbours' apertures. A tube per LED keeps them separate.
-    Built solid and drilled afterwards rather than as a ready-made tube, so it
-    shares material with the plate instead of meeting it on a coincident face.
+    Once the plate stands off the board, light from one LED washes into its
+    neighbours' holes. A tube per LED keeps them apart. Built solid and drilled
+    later rather than as a ready-made tube, so it shares material with the
+    plate instead of meeting it on a coincident face.
 
     Returns None when the plate is close enough to the board not to need one.
     """
@@ -124,42 +124,36 @@ def light_post(p: Params, led: Led) -> Part | None:
         return None
 
     post = Cylinder(
-        p.led_body_bore / 2 + p.tunnel_wall, length + p.thickness, align=_BOTTOM
+        led.aperture / 2 + p.tunnel_wall, length + p.thickness, align=_BOTTOM
     )
     return Pos(led.x, led.y, -p.reach - length) * post
 
 
 def led_bezel(p: Params, led: Led) -> Part:
-    """Bore through the front plate and its light post: clearance, aperture,
-    chamfer.
+    """The hole itself: a straight bore through plate and post, and a chamfer.
 
-    The land of material left at the aperture keeps the hole reading as a bezel
-    rather than a raw drilling.
+    A clearance hole for the LED to sit in, not a window with material left
+    across it, so there is nothing to leave a land on. The chamfer only breaks
+    the front edge so it does not read as a raw drilling.
     """
-    face = -p.reach + p.thickness  # outer face of the front plate
-    bore_top = face - p.led_aperture_land
-    bore_bottom = -p.reach - max(p.tunnel_length, 0.0) - 1
+    face = -p.reach + p.thickness
+    bottom = -p.reach - max(p.tunnel_length, 0.0) - 1
 
-    body_bore = Pos(0, 0, bore_bottom) * Cylinder(
-        p.led_body_bore / 2, bore_top - bore_bottom, align=_BOTTOM
-    )
-    aperture = Pos(0, 0, bore_top) * Cylinder(
-        led.aperture / 2, p.led_aperture_land + 1, align=_BOTTOM
-    )
+    bore = Pos(0, 0, bottom) * Cylinder(led.aperture / 2, face - bottom, align=_BOTTOM)
     chamfer = Pos(0, 0, face) * Cone(
         bottom_radius=led.aperture / 2,
         top_radius=led.aperture / 2 + p.led_chamfer,
         height=p.led_chamfer,
         align=_SINK,
     )
-    return Pos(led.x, led.y, 0) * (body_bore + aperture + chamfer)
+    return Pos(led.x, led.y, 0) * (bore + chamfer)
 
 
 def _check_features_fit(p: Params) -> None:
-    """Every button and LED has to land on the front plate, inside the walls.
+    """Every button and LED has to land on the plate, clear of its edge.
 
     Easy to break by nudging the outline or the cluster offset, and the result
-    is a hole cut through a wall or out across the flange, which is obvious in
+    is a hole cut through the border the screws land in, which is obvious in
     the viewer but easy to miss in a batch of exports.
     """
     x0 = y0 = p.edge_margin
@@ -169,7 +163,6 @@ def _check_features_fit(p: Params) -> None:
     half_w = (p.button_width + 2 * p.flexure_slot) / 2
     half_h = (p.button_height + 2 * p.flexure_slot) / 2
     tab_reach = (half_w**2 + half_h**2) ** 0.5
-    post = p.led_body_bore / 2 + p.tunnel_wall
 
     strays = []
     for sw in p.placed_switches:
@@ -179,15 +172,15 @@ def _check_features_fit(p: Params) -> None:
         ):
             strays.append(f"button {sw.name!r} at ({sw.x:.1f}, {sw.y:.1f})")
     for led in p.placed_leds:
+        post = led.aperture / 2 + p.tunnel_wall
         if not (x0 + post <= led.x <= x1 - post and y0 + post <= led.y <= y1 - post):
             strays.append(f"LED {led.name!r} at ({led.x:.1f}, {led.y:.1f})")
 
     if strays:
         raise ValueError(
             "these features come closer to the panel edge than edge_margin "
-            "allows; the usable area spans "
-            f"({x0:.1f}, {y0:.1f}) to ({x1:.1f}, {y1:.1f}): "
-            + "; ".join(strays)
+            f"allows; the usable area spans ({x0:.1f}, {y0:.1f}) to "
+            f"({x1:.1f}, {y1:.1f}): " + "; ".join(strays)
             + ". Widen the panel or move the cluster with cluster_x/cluster_y."
         )
 
@@ -200,19 +193,23 @@ def _check_no_overlaps(p: Params) -> None:
     geometry and a useless part, so it has to be tested for directly.
     """
     half_w = p.button_width / 2 + p.flexure_slot
-    post = p.led_body_bore / 2 + p.tunnel_wall
 
     clashes = []
     for sw in p.placed_switches:
         angle = math.radians(sw.rotation)
         cos_a, sin_a = math.cos(-angle), math.sin(-angle)
         for led in p.placed_leds:
+            post = led.aperture / 2 + p.tunnel_wall
             dx, dy = led.x - sw.x, led.y - sw.y
             # Into the tab's own frame: hinge at the origin, tab down -y.
             lx = dx * cos_a - dy * sin_a
             ly = dx * sin_a + dy * cos_a
             inside_x = abs(lx) <= half_w + post
-            inside_y = -(p.button_height + p.flexure_slot) - post <= ly <= p.flexure_slot / 2 + post
+            inside_y = (
+                -(p.button_height + p.flexure_slot) - post
+                <= ly
+                <= p.flexure_slot / 2 + post
+            )
             if inside_x and inside_y:
                 clashes.append(f"LED {led.name!r} sits in button {sw.name!r}'s opening")
 
