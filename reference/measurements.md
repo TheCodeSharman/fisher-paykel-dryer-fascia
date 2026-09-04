@@ -206,12 +206,12 @@ the keylock's position at the same time.
 | led08 | 10.36 | 89.07 | |
 | led09 | 28.85 | 117.92 | |
 | *keylock* | | | *tab, not an LED* |
-| led10 | 19.77 | 137.69 | derived: 25.43 from led09's left counterbore edge to led10's right, less one counterbore |
-| led11 | 7.84 | 145.53 | derived: 2.18 of gap between counterbores, plus one counterbore |
-| led12 | 5.97 | 150.53 | derived: 17.6 across all three, less one counterbore, halved |
-| led13 | 5.97 | 156.50 | |
+| led10 | 19.49 | 137.41 | derived: 25.43 from led09's left counterbore edge to led10's right, less one counterbore |
+| led11 | 8.12 | 145.53 | derived: 2.18 of gap between counterbores, plus one counterbore |
+| led12 | 5.83 | 150.53 | derived: 17.6 across all three, less one counterbore, halved |
+| led13 | 5.83 | 156.36 | |
 
-The row spans 156.50 centre to centre, running further right than the buttons'
+The row spans 156.36 centre to centre, running further right than the buttons'
 145.39.
 
 **Re-measured off the counterbore edges**, which calipers seat against; the
@@ -330,21 +330,10 @@ nothing that matters any more.
    is 1.2 against the original's 2.41, so the keylock tab spans 12.97 along x
    where the original spans 15.39.
 
-9. **Do the close-set counterbores actually overlap?** They look like it on the
-   part, `photos/11-close-set-leds-overlap.jpg`, and the model leaves 0.31
-   between them.
-
-   The measurements say 0.31 is right, and two independent ones agree. The
-   first pass, off the hole edges, gave 5.98 for those pitches. The counterbore
-   span, 17.6 across all three less one 5.66 counterbore and halved, gives
-   5.97. Different features, different technique, same answer. The counterbores
-   are confirmed all one size, so a 5.97 pitch cannot close a 5.66 hole.
-
-   A 0.31 sliver is a few pixels of bright edge in a photograph and reads as
-   touching. **The check is by feel, not eye**: a fingernail or a pin will
-   catch a 0.31 ridge on the centreline between two of them. If there is
-   genuinely nothing there, then one of two agreeing measurements is wrong and
-   the 17.6 wants taking again.
+9. ~~Do the close-set counterbores actually overlap?~~ They do, by 0.11, and
+   the model now shows it. The counterbore is 5.94 and the same on every LED;
+   the 5.66 first taken was simply wrong, and every pitch derived from a
+   counterbore span moved with it.
 
 10. **The lip overhangs when printed.** Front face down, the lip ends up at the
    top of the print, standing `lip_width` out beyond the walls with nothing

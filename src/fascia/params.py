@@ -166,16 +166,18 @@ _LED_PITCHES = (
     10.36,  # led06 -> led07
     10.36,  # led07 -> led08
     28.85,  # led08 -> led09, re-measured off the counterbores
-    19.77,  # led09 -> led10, derived: the keylock takes led10's left edge, so
+    19.49,  # led09 -> led10, derived: the keylock takes led10's left edge, so
             # this was measured led09's left counterbore edge to led10's right,
             # 25.43, less one counterbore diameter
-    7.84,  # led10 -> led11, derived: 2.18 of clear gap between the two
+    8.12,  # led10 -> led11, derived: 2.18 of clear gap between the two
            # counterbores, plus one counterbore diameter
     5.0,
-    5.97,  # led11 -> led12, derived: these three sit too close for a
+    5.83,  # led11 -> led12, derived: these three sit too close for a
            # counterbore edge between them, so the span across all three was
-           # taken, 17.6 less one counterbore diameter, halved
-    5.97,  # led12 -> led13
+           # taken, 17.6 less one counterbore diameter, halved. At a 5.94
+           # counterbore that is an overlap of 0.11, which is what the part
+           # shows: the three run together with no material between.
+    5.83,  # led12 -> led13
 )
 
 _LEDS = tuple(
@@ -285,7 +287,7 @@ class Params:
     #: A counterbore in the front face, wider than the hole behind it. This is
     #: what reads as the bezel, and mistaking the hole for it is what made the
     #: gaps between LEDs look too wide.
-    led_counterbore: float = 5.66
+    led_counterbore: float = 5.94
     #: PLACEHOLDER: how deep that counterbore goes.
     led_counterbore_depth: float = 1.0
 
