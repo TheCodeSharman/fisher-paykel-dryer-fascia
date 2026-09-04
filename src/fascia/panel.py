@@ -53,41 +53,40 @@ def _slab(width: float, height: float, radius: float, depth: float, z: float) ->
 
 
 def body(p: Params) -> Part:
-    """The tray: flange, walls and front plate, before any features are cut."""
-    inner_radius = max(p.corner_radius - p.body_inset, 1.0)
+    """The front plate, and the skirt behind it if there is one.
 
-    # A solid block from the front plate up through the flange, then the flange
-    # spread out around it, then the well hollowed back out of the top.
-    trunk = _slab(
-        p.body_width,
-        p.body_height,
-        inner_radius,
-        depth=p.reach + p.flange_thickness,
-        z=-p.reach,
+    A flat plate, not a tray. Its own perimeter is the flange that lands on the
+    dryer skin and takes the screws, so nothing stands proud of the front face.
+    Everything the panel adds -- skirt, plungers, light posts -- projects
+    backwards, into the machine.
+    """
+    plate = _slab(p.width, p.height, p.corner_radius, p.thickness, z=-p.reach)
+    if p.skirt_depth <= 0:
+        return plate
+
+    i = p.skirt_inset
+    radius = max(p.corner_radius - i, 1.0)
+    outer = _slab(
+        p.width - 2 * i, p.height - 2 * i, radius, p.skirt_depth, z=-p.reach - p.skirt_depth
     )
-    trunk = Pos(p.body_inset, p.body_inset, 0) * trunk
-
-    flange = _slab(p.width, p.height, p.corner_radius, p.flange_thickness, z=0)
-
-    well = _slab(
-        p.body_width - 2 * p.wall,
-        p.body_height - 2 * p.wall,
-        max(inner_radius - p.wall, 0.5),
-        depth=p.reach - p.thickness + p.flange_thickness + 1,
-        z=-p.reach + p.thickness,
+    inner = _slab(
+        p.width - 2 * i - 2 * p.skirt_wall,
+        p.height - 2 * i - 2 * p.skirt_wall,
+        max(radius - p.skirt_wall, 0.5),
+        p.skirt_depth,
+        z=-p.reach - p.skirt_depth,
     )
-    well = Pos(p.body_inset + p.wall, p.body_inset + p.wall, 0) * well
-
-    return (trunk + flange) - well
+    skirt = Pos(i, i, 0) * outer - Pos(i + p.skirt_wall, i + p.skirt_wall, 0) * inner
+    return plate + skirt
 
 
 def label_recess(p: Params) -> Part:
     """Shallow pocket in the front face so the printed label sits flush."""
-    m = p.body_inset + p.wall + p.label_recess_margin
+    m = p.label_recess_margin
     pocket = _slab(
         p.width - 2 * m,
         p.height - 2 * m,
-        radius=2.0,
+        radius=max(p.corner_radius - m, 1.0),
         depth=p.label_recess_depth,
         z=-p.reach + p.thickness - p.label_recess_depth,
     )
@@ -96,12 +95,12 @@ def label_recess(p: Params) -> Part:
 
 def countersunk_hole(p: Params, hole: ScrewHole) -> Part:
     """Clearance hole through the flange, countersunk at its outer face."""
-    shank = Pos(0, 0, -1) * Cylinder(
-        p.screw_shank / 2, p.flange_thickness + 2, align=_BOTTOM
+    shank = Pos(0, 0, -p.reach - 1) * Cylinder(
+        p.screw_shank / 2, p.thickness + 2, align=_BOTTOM
     )
 
     # A 90-degree countersink drops 1mm for every 1mm of radius it gains.
-    sink = Pos(0, 0, p.flange_thickness) * Cone(
+    sink = Pos(0, 0, -p.reach + p.thickness) * Cone(
         bottom_radius=p.screw_shank / 2,
         top_radius=p.screw_head / 2,
         height=(p.screw_head - p.screw_shank) / 2,
@@ -163,8 +162,7 @@ def _check_features_fit(p: Params) -> None:
     is a hole cut through a wall or out across the flange, which is obvious in
     the viewer but easy to miss in a batch of exports.
     """
-    x0 = p.body_inset + p.wall
-    y0 = p.body_inset + p.wall
+    x0 = y0 = p.edge_margin
     x1, y1 = p.width - x0, p.height - y0
 
     # Conservative and rotation-independent: the circle the tab opening fits in.
@@ -186,7 +184,8 @@ def _check_features_fit(p: Params) -> None:
 
     if strays:
         raise ValueError(
-            "these features fall outside the front plate, which spans "
+            "these features come closer to the panel edge than edge_margin "
+            "allows; the usable area spans "
             f"({x0:.1f}, {y0:.1f}) to ({x1:.1f}, {y1:.1f}): "
             + "; ".join(strays)
             + ". Widen the panel or move the cluster with cluster_x/cluster_y."
@@ -225,9 +224,10 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
     """Build the panel for one button strategy."""
     if variant not in VARIANTS:
         raise ValueError(f"unknown variant {variant!r}, expected one of {VARIANTS}")
-    if p.reach < p.thickness:
+    if p.reach < 0:
         raise ValueError(
-            f"reach {p.reach} is less than the front plate thickness {p.thickness}"
+            f"reach {p.reach} is negative, which would stand the plate off the "
+            f"dryer skin with nothing under it"
         )
     if p.switch_gap <= p.pre_travel:
         raise ValueError(

@@ -190,13 +190,17 @@ class Params:
     #: measured 2.73 on its return edge; rounded up to 14 layers at 0.2 so the
     #: slicer is not left with a part layer to fudge.
     thickness: float = 2.8
-    #: The lip that lands on the dryer skin and takes the screws.
-    flange_thickness: float = 2.4
-    #: Side walls of the tray, joining the front plate up to the flange.
-    wall: float = 2.0
-    #: How far the tray body sits inside the flange edge, leaving a landing
-    #: strip of flange around it for the screws.
-    body_inset: float = 10.0
+    #: How close a feature may come to the panel edge, leaving a border for the
+    #: screws to land in. The plate's own perimeter is the flange.
+    edge_margin: float = 8.0
+
+    #: A skirt dropping off the back of the plate into the opening, to locate
+    #: the panel and stiffen it. Zero until the opening is measured; nothing
+    #: about the fit is known yet, and a skirt that does not fit is worse than
+    #: none.
+    skirt_depth: float = 0.0
+    skirt_inset: float = 6.0
+    skirt_wall: float = 2.0
 
     # ------------------------------------------------------------------
     # Depth. The chain that decides whether the buttons reach the switches.
@@ -210,9 +214,12 @@ class Params:
     # ------------------------------------------------------------------
     skin_to_switch: float = 18.0  # PLACEHOLDER
     skin_to_led: float = 20.0  # PLACEHOLDER
-    #: PLACEHOLDER. Deeper keeps the plungers short, but sinks the buttons
-    #: down a well. See `plunger_tip_sweep` for what shallow costs.
-    reach: float = 6.0
+    #: How far the plate's *back* face sits below the dryer skin. Zero lays it
+    #: flat on the skin with its front face outermost, which is what the panel
+    #: wants to be: nothing stands proud of the face for a finger to catch.
+    #: Sinking it keeps the plungers short but starts to bury the buttons, and
+    #: past `thickness` the face drops below the skin altogether.
+    reach: float = 0.0
 
     # ------------------------------------------------------------------
     # Label
@@ -348,14 +355,6 @@ class Params:
     # ------------------------------------------------------------------
     # Derived
     # ------------------------------------------------------------------
-    @property
-    def body_width(self) -> float:
-        return self.width - 2 * self.body_inset
-
-    @property
-    def body_height(self) -> float:
-        return self.height - 2 * self.body_inset
-
     @property
     def placed_switches(self) -> tuple[Switch, ...]:
         """The switches in panel coordinates rather than cluster coordinates."""

@@ -6,37 +6,28 @@ broke away around the buttons, leaving the control board open to the room.
 
 The original fascia is being discarded, not repaired. This part covers the
 control board and **screws straight to holes drilled in the dryer's skin**, so
-it has to span the distance down to the board itself. It is a shallow tray
-rather than a flat plate:
+it has to span the distance down to the board itself.
+
+It is a flat plate whose own perimeter is the flange: it lies on the skin,
+takes the screws around its border, and everything it adds projects backwards
+into the machine. Nothing stands proud of the front face.
 
 ```
-flange  -----____                    ____-----   z = 0, on the dryer skin
-                 |                  |
-                 | wall             | wall
-                 |__________________|
-                    front plate                  z = -reach
+   front face, outermost
+  ______________________________________
+ |______________________________________|  <- plate, screwed through its border
+      |          |            |
+      | plunger  | light post |             everything projects back
+      v          v            v
+  ------------------------------------      control board
 ```
 
-The flange lands on the skin and takes the screws; the walls carry the front
-plate down into the machine by `reach`, leaving `switch_gap` for the plungers
-to cross. Get that one number wrong and the buttons either miss the switches or
-hold them permanently pressed, so it is the measurement to take most carefully.
+`skin_to_switch` is the measurement everything hangs off: get it wrong and the
+buttons either miss the switches or hold them permanently pressed.
 
-Because the front plate now stands off the board, each LED gets a light tunnel
-dropping towards it. Without them the LEDs wash into each other's apertures
-across the gap.
-
-| | |
-|---|---|
-| Control board | `PCB ED55/56 Dryer`, F&P part `3470428-C`, dated 1997 |
-| Firmware | EPROM labelled `ED56 427318270820` |
-| Buttons | 9 &mdash; Delay Start, Power, Start/Pause, Dryness &times;2, Temperature &times;2, Wrinkle Guard, and a keylock turned on its side |
-| Indicators | ~12 LEDs (count and order still to be confirmed) |
-
-The dryer is wall-mounted, and the fascia runs **horizontally along the
-bottom** of the machine as it hangs. The board silkscreen reads upside-down in
-that position, so which way up the printed label should read is a decision
-still to be made rather than something to copy from the original.
+Because the plate stands off the board, each LED gets a light tunnel dropping
+towards it. Without them the LEDs wash into each other's apertures across the
+gap.
 
 ## Button design
 

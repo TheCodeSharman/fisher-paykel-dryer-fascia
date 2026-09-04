@@ -63,10 +63,15 @@ still fail to produce a solid.
   positions can be taken straight off the calipers. **`z = 0` is the dryer's
   outer skin**, the surface the flange screws down onto, so everything inside
   the machine is negative and the front plate sits at `z = -reach`.
-- The part is a **tray, not a plate**: the original fascia is discarded and this
-  screws directly to the dryer, so it spans the depth down to the board itself.
-  `switch_gap` (`skin_to_switch - reach`) is the number that decides whether the
-  buttons work; `make_panel` refuses to build if it goes non-positive.
+- The part is a **flat plate**, and its own perimeter is the flange that takes
+  the screws. Everything it adds projects *backwards*: skirt, plungers, light
+  posts. Nothing may stand proud of the front face, which is the label surface
+  and goes on the print bed.
+- `switch_gap` (`skin_to_switch - reach`) decides whether the buttons work;
+  `make_panel` refuses to build if it goes non-positive.
+- `make_panel` also refuses if the panel comes out as more than one body, or if
+  an LED lands in a button's opening. Both have happened; neither is obvious in
+  a viewer.
 - Features in the front plate are modelled in **plate-local** coordinates, where
   `z` runs `0` to `thickness`, then translated by `Pos(0, 0, -reach)`. Keep new
   front-plate features in that convention.
