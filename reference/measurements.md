@@ -76,16 +76,25 @@ Eight buttons, read off the original label left to right. Board designators run
 `S1`&ndash;`S9`, so one switch on the board is not brought out to a button;
 confirm which.
 
-| Button | Board ref | X | Y | Standoff |
+Nine buttons, so every board switch `S1`-`S9` is brought out after all. X is
+the tab centre, Y the hinge line, both in cluster coordinates.
+
+| Button | Board ref | X | Y | Rotation |
 |---|---|---|---|---|
-| delay_start | | | | |
-| power | | | | |
-| start_pause | | | | |
-| dryness_down | | | | |
-| dryness_up | | | | |
-| temp_down | | | | |
-| temp_up | | | | |
-| wrinkle_guard | | | | |
+| delay_start | | | 0 | |
+| power | | | 0 | |
+| start_pause | | | 0 | |
+| dryness_down | | | 0 | |
+| dryness_up | | | 0 | |
+| temp_down | | | 0 | |
+| temp_up | | | 0 | |
+| wrinkle_guard | | | 0 | |
+| keylock | | | | turned on its side; **which edge is the hinge?** |
+
+The keylock sits down among the LEDs at the bottom right rather than on the
+button line, running `tab, LED, gap, 3 LEDs`. Its tab is the same size as the
+others; only the printed button on the label is smaller, which is an artwork
+matter and not a geometry one.
 
 Also needed: tactile switch actuator diameter, and its travel and force if you
 can feel it, since that sets how stiff the hinge can be.
@@ -100,9 +109,9 @@ tab near the middle, away from the cracks.
 | F3 | Face thickness | 2.73 mm | **on the wrap-around return edge, not the face.** Assumed equal to the face; confirm at the crack that runs through the face |
 | F4 | Tab width | 5.63 mm | across the tab, inside the slot |
 | F5 | Tab height | 10.57 mm | hinge line to the free end. **The hinge is at the top and the tab hangs down**, so the tab occupies negative Y |
-| F6 | Slot width | 2.41 mm | the gap itself. Wide, because moulding needs steel there. **Cross-check wanted:** the whole opening, outer edge to outer edge, should be ~10.45 |
+| F6 | Slot width | 2.41 mm | uniform all round, tab edge to hole edge. Cross-checked: whole opening 10.63, so ~2.50 a side. Wide because moulding needs steel there |
 | F7 | Tab corner radius | semicircular | so half the tab width, 2.815 |
-| F8 | Tab proud of the face | | up, flush or dished |
+| F8 | Tab face | flush, with a 5.25 circle | the pad is flush with the panel face; the tab's flat is recessed *around* it |
 | F9 | Hinge line to top | 41.07 mm | **confirm what "top" is** &mdash; taken as the top edge of the fascia in the same frame, i.e. 41.07 above the hinge line |
 | F10 | Hinge line to bottom edge | | the other half of the height, below the LED row |
 
@@ -159,7 +168,11 @@ nothing that matters any more.
    label artwork all share that frame, and nothing needs rotating at the end.
 2. **How much to replace.** Does the new panel stop at the board opening, or
    run further along the fascia to a natural line?
-3. **Which board switch has no button** (`S1`&ndash;`S9` is nine, the label
-   shows eight).
+3. ~~Which board switch has no button.~~ None: the ninth is the keylock,
+   turned on its side down in the LED row. All of `S1`-`S9` are used.
 4. ~~Printer and material.~~ Settled: PETG on FDM, panel printed flat with the
    front face on the bed.
+5. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
+   the top of the walls by `body_inset`. Depending on how deep `reach` turns
+   out, that may want a taper down to 45 degrees so it self-supports. Not worth
+   solving until the depth is measured.

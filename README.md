@@ -30,8 +30,8 @@ across the gap.
 |---|---|
 | Control board | `PCB ED55/56 Dryer`, F&P part `3470428-C`, dated 1997 |
 | Firmware | EPROM labelled `ED56 427318270820` |
-| Buttons | 8 &mdash; Delay Start, Power, Start/Pause, Dryness &times;2, Temperature &times;2, Wrinkle Guard |
-| Indicators | ~12 LEDs (count to be confirmed against the board) |
+| Buttons | 9 &mdash; Delay Start, Power, Start/Pause, Dryness &times;2, Temperature &times;2, Wrinkle Guard, and a keylock turned on its side |
+| Indicators | ~12 LEDs (count and order still to be confirmed) |
 
 The dryer is wall-mounted, and the fascia runs **horizontally along the
 bottom** of the machine as it hangs. The board silkscreen reads upside-down in

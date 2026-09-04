@@ -18,10 +18,13 @@ from build123d import (
     Align,
     Axis,
     Box,
+    Circle,
     Cylinder,
     GeomType,
+    Location,
     Part,
     Pos,
+    Rotation,
     Rectangle,
     RectangleRounded,
     Sketch,
@@ -92,51 +95,84 @@ def _tab_at(p: Params, grow: float = 0.0) -> Sketch:
     return Pos(0, -p.button_height / 2) * _tab_outline(p, grow)
 
 
-def switch_point(p: Params, sw: Switch) -> Pos:
+def _place(sw: Switch) -> Location:
+    """Put local tab geometry where the switch is, turned the way it sits.
+
+    Tab geometry is built with its hinge line on the origin and the tab hanging
+    down the negative y axis. Most buttons sit that way up; the keylock is
+    turned on its side, so it swings sideways instead.
+    """
+    return Pos(sw.x, sw.y) * Rotation(0, 0, sw.rotation)
+
+
+def switch_point(p: Params, sw: Switch) -> Location:
     """Where the plunger lands: below the hinge line by `plunger_drop`.
 
     Not the same as the tab centre in general. How far the actuator sits from
     the hinge sets the leverage, so it is a parameter rather than an assumption.
+    Follows the tab round when the button is rotated.
     """
-    return Pos(sw.x, sw.y - p.plunger_drop, 0)
+    return _place(sw) * Pos(0, -p.plunger_drop, 0)
 
 
 def flexure_slot(p: Params, sw: Switch) -> Part:
     """The U-shaped slot that frees the tab on its left, bottom and right.
 
     The ring of material around the tab is trimmed back to the hinge line, so
-    the top edge stays joined and the tab swings from there.
+    the top stays joined and the tab swings from there.
+
+    The two legs do not stop square at the hinge line. They run on and finish
+    in rounded ends centred on it, half a slot width past, as the original
+    does. That is not decoration: a square internal corner at the end of a slot
+    is a stress raiser sitting exactly where the hinge works hardest, and this
+    part has to survive years of pressing.
     """
     s = p.flexure_slot
     ring = _tab_at(p, grow=s) - _tab_at(p)
 
-    # Keep only the part of the ring at or below the hinge line at y = 0.
+    # Everything below the hinge line, plus a round end cap on each leg
+    # straddling it.
     below_hinge = Pos(0, -(p.button_height + s) / 2) * Rectangle(
         p.button_width + 2 * s + 2, p.button_height + s
     )
+    leg_x = p.button_width / 2 + s / 2
+    caps = Pos(leg_x, 0) * Circle(s / 2) + Pos(-leg_x, 0) * Circle(s / 2)
 
-    solid = extrude(ring & below_hinge, p.thickness + 2)
-    return Pos(sw.x, sw.y, -1) * solid
+    solid = extrude(ring & (below_hinge + caps), p.thickness + 2)
+    return _place(sw) * Pos(0, 0, -1) * solid
 
 
 def flexure_hinge_relief(p: Params, sw: Switch) -> Part | None:
-    """Thinning cut across the hinge line, taken from the back face."""
+    """Thinning cut across the hinge, taken from the back face.
+
+    Sits just above the slot end caps, where the tab first becomes joined to
+    the panel, and spans the whole opening so the bend is not forced into the
+    corners left either side of the legs.
+    """
     depth = p.thickness - p.hinge_thickness
     if depth <= 0:
         return None
-    relief = Box(p.button_width, p.hinge_band, depth, align=_BOTTOM)
-    return Pos(sw.x, sw.y, 0) * relief
+    relief = Box(
+        p.button_width + 2 * p.flexure_slot, p.hinge_band, depth, align=_BOTTOM
+    )
+    return _place(sw) * Pos(0, p.flexure_slot / 2 + p.hinge_band / 2, 0) * relief
 
 
 def flexure_pad(p: Params, sw: Switch) -> Part | None:
-    """Bump raised on the tab so the button can be found through the label."""
+    """Bump raised on the tab so the button can be found through the label.
+
+    None by default: the original is flush and the front face prints on the
+    bed, so a proud pad would have to print below it. Kept because raising it
+    is the obvious thing to try if the buttons prove hard to find by feel, and
+    it only costs flipping the part in the slicer.
+    """
     if p.flexure_pad_rise <= 0:
         return None
-    pad = extrude(_tab_at(p, grow=-p.flexure_pad_inset), p.flexure_pad_rise)
+    pad = extrude(Circle(p.flexure_pad_diameter / 2), p.flexure_pad_rise)
     pad = fillet(
         pad.edges().group_by(Axis.Z)[-1], radius=min(0.4, p.flexure_pad_rise / 2.5)
     )
-    return Pos(sw.x, sw.y, p.thickness) * pad
+    return switch_point(p, sw) * Pos(0, 0, p.thickness) * pad
 
 
 # ---------------------------------------------------------------------------

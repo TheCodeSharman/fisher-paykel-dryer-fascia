@@ -43,6 +43,9 @@ class Switch:
     name: str
     x: float
     y: float
+    #: Degrees anticlockwise. Turns which way the tab swings: 0 hangs down from
+    #: a hinge along its top, 90 swings sideways. The keylock is the odd one.
+    rotation: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -86,6 +89,10 @@ _SWITCHES = (
     Switch("temp_down", 108.8, 0.0),
     Switch("temp_up", 126.8, 0.0),
     Switch("wrinkle_guard", 152.8, 0.0),
+    # The keylock is turned on its side and sits down in the LED row rather
+    # than on the button line. Same tab size as the rest. PLACEHOLDER position,
+    # and the rotation sign still needs settling: which edge is its hinge?
+    Switch("keylock", 140.0, -16.0, rotation=90.0),
 )
 
 _LEDS = (
@@ -226,8 +233,16 @@ class Params:
     flexure_slot: float = 1.2
     hinge_band: float = 2.0
     hinge_thickness: float = 0.8
-    flexure_pad_rise: float = 0.6
-    flexure_pad_inset: float = 0.8
+    #: The pressed pad is a circle on the tab, measured at 5.25 across (F8).
+    flexure_pad_diameter: float = 5.25
+    #: How far that pad stands proud of the front face.
+    #:
+    #: Zero, and deliberately. The original is flush at the top, and the front
+    #: face goes on the bed, so anything proud would have to print below it.
+    #: The original also recesses the tab's flat *around* the pad; printed face
+    #: down that flat becomes an unsupported annulus hanging off the pad, and
+    #: the label covers it anyway. Flush costs nothing and prints clean.
+    flexure_pad_rise: float = 0.0
 
     # ------------------------------------------------------------------
     # Buttons: "separate" variant, loose printed caps in through-apertures
@@ -258,7 +273,7 @@ class Params:
     def placed_switches(self) -> tuple[Switch, ...]:
         """The switches in panel coordinates rather than cluster coordinates."""
         return tuple(
-            Switch(s.name, s.x + self.cluster_x, s.y + self.cluster_y)
+            Switch(s.name, s.x + self.cluster_x, s.y + self.cluster_y, s.rotation)
             for s in self.switches
         )
 
