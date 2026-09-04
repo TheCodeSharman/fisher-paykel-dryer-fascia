@@ -330,14 +330,31 @@ nothing that matters any more.
    is 1.2 against the original's 2.41, so the keylock tab spans 12.97 along x
    where the original spans 15.39.
 
-9. **The lip overhangs when printed.** Front face down, the lip ends up at the
+9. **The close-set counterbores overlap on the part, but not in the model.**
+   The three at the right-hand end run into each other with no material
+   between; the model leaves 0.31.
+
+   The inputs contradict each other. A span of 17.6 across all three, less a
+   5.66 counterbore, gives a 5.97 pitch, and 5.97 is wider than 5.66 so they
+   cannot touch. For a real overlap either the counterbore on *those three* is
+   6.0 or more, or the span is under 16.98, which is where three of them would
+   touch exactly.
+
+   Most likely the close-set three carry a wider counterbore than the one
+   measured. Wanted: a caliper across the counterbore of one of those three
+   specifically. If it reads 5.66 as well, then the 17.6 is the suspect number.
+
+   Left alone meanwhile. Guessing a diameter to force an overlap would put the
+   LED holes in the wrong place, and their spacing is what has to be right.
+
+10. **The lip overhangs when printed.** Front face down, the lip ends up at the
    top of the print, standing `lip_width` out beyond the walls with nothing
    under it. Either it wants a taper down to 45 degrees so it self-supports, or
    it gets printed with support. Support would touch the side that faces the
    room rather than the mounting face, so it is cosmetic rather than serious.
    Worth settling once the outline is fixed, since the lip changes with it.
 
-10. **Does the recess extend past the slot?** The model recesses the tab and its
+11. **Does the recess extend past the slot?** The model recesses the tab and its
    slot. The close-up looks like a wider rounded rectangle reaching a little
    way into the panel around each tab. If so it is presumably there so the
    label is not dragged over the slot's edge. Worth a reading of how far out it
