@@ -198,27 +198,13 @@ nothing that matters any more.
    turned on its side down in the LED row. All of `S1`-`S9` are used.
 4. ~~Printer and material.~~ Settled: PETG on FDM, panel printed flat with the
    front face on the bed.
-5. **Root fillet at the hinge, and what it means for the slot width.**
-   The original flares out with an inverse radius where the tab meets the hinge
-   line. That is stress relief: it is what stops a crack starting at the tab
-   root, so it matters more on a printed part than a moulded one.
+5. ~~Root fillet at the hinge.~~ Not a thing. The close-up,
+   `photos/07-button-tab-closeup.jpg`, shows the slot legs running parallel and
+   simply stopping in semicircular caps of the slot's own width. That rounded
+   end was what looked like an inverse radius. The model already builds it.
 
-   Not modelled yet, because two readings fit the description and they build
-   differently:
-
-   a. the tab's straight sides flare outwards into the hinge line, so the slot
-      legs stop short and the tab is joined through the flare;
-   b. the slot leg's end cap itself opens out into the hinge line.
-
-   Worth a close photo of one tab root.
-
-   There is a constraint either way. A fillet tangent to both the tab side and
-   the hinge line has radius `r` and eats `2r` across the slot, so `r` cannot
-   exceed half the slot width without bridging the gap and welding the tab to
-   the panel. The original's 2.41 slot allows about 1.2; the 1.2 slot chosen
-   for printing allows only about 0.6. **So the wide slot may not be a moulding
-   artefact at all &mdash; it may be there to make room for this fillet.**
-   Reconsider `flexure_slot` once the geometry is known.
+   So there is no fillet needing room, and no reason to widen `flexure_slot`
+   back towards the original's 2.41 on that account.
 
 6. **The hinge does not match the original and does not look workable.**
    Deferred to test prints rather than redesigned blind. What is there now is a
@@ -228,7 +214,13 @@ nothing that matters any more.
    whether it is thinned at all or just flexes the full 2.73, and how far back
    from the slot ends the thinning runs. Print a strip of tabs at a few
    thicknesses and pick by feel.
-7. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
+7. **Shallow recess around each tab.** The close-up shows a rounded-rectangle
+   depression in the panel face containing the whole tab and its slot, with the
+   bump rising back to about face level out of it. Not modelled. Probably
+   clearance so the label is not dragged over a sharp edge as the tab moves.
+   Worth a depth reading, and a decision on whether it earns its keep once the
+   label is on.
+8. **Flange overhang.** Printed face down, the flange is a lip cantilevered off
    the top of the walls by `body_inset`. Depending on how deep `reach` turns
    out, that may want a taper down to 45 degrees so it self-supports. Not worth
    solving until the depth is measured.
