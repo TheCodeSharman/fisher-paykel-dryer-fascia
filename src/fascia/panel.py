@@ -18,6 +18,8 @@ the front plate, at the bottom of the well.
 See `params` for the full coordinate system and dimension chain.
 """
 
+import math
+
 from build123d import (
     Align,
     Cone,
@@ -191,6 +193,34 @@ def _check_features_fit(p: Params) -> None:
         )
 
 
+def _check_no_overlaps(p: Params) -> None:
+    """No LED may land in a button's opening.
+
+    Not covered by the single-body check: an LED bored through a tab does not
+    cut anything free, it just puts a hole in the tab. The result is valid
+    geometry and a useless part, so it has to be tested for directly.
+    """
+    half_w = p.button_width / 2 + p.flexure_slot
+    post = p.led_body_bore / 2 + p.tunnel_wall
+
+    clashes = []
+    for sw in p.placed_switches:
+        angle = math.radians(sw.rotation)
+        cos_a, sin_a = math.cos(-angle), math.sin(-angle)
+        for led in p.placed_leds:
+            dx, dy = led.x - sw.x, led.y - sw.y
+            # Into the tab's own frame: hinge at the origin, tab down -y.
+            lx = dx * cos_a - dy * sin_a
+            ly = dx * sin_a + dy * cos_a
+            inside_x = abs(lx) <= half_w + post
+            inside_y = -(p.button_height + p.flexure_slot) - post <= ly <= p.flexure_slot / 2 + post
+            if inside_x and inside_y:
+                clashes.append(f"LED {led.name!r} sits in button {sw.name!r}'s opening")
+
+    if clashes:
+        raise ValueError("; ".join(clashes))
+
+
 def make_panel(p: Params, variant: str = FLEXURE) -> Part:
     """Build the panel for one button strategy."""
     if variant not in VARIANTS:
@@ -207,6 +237,7 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
         )
 
     _check_features_fit(p)
+    _check_no_overlaps(p)
 
     part = body(p)
 
@@ -232,7 +263,7 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
     for sw in p.placed_switches:
         if variant == FLEXURE:
             part -= to_plate * buttons.flexure_slot(p, sw)
-            relief = buttons.flexure_hinge_relief(p, sw)
+            relief = buttons.flexure_relief(p, sw)
             if relief is not None:
                 part -= to_plate * relief
             pad = buttons.flexure_pad(p, sw)
@@ -244,6 +275,17 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
             )
         else:
             part -= to_plate * buttons.cap_aperture(p, sw)
+
+    solids = part.solids()
+    if len(solids) != 1:
+        biggest = max(s.volume for s in solids)
+        raise ValueError(
+            f"the {variant} panel came out as {len(solids)} separate bodies, not "
+            f"one. Something has been cut free: the largest is {biggest:.0f} mm3 "
+            f"of {part.volume:.0f}. Usually a button tab overlapping an LED, or "
+            f"a feature crossing a wall. An STL like this looks fine in a viewer "
+            f"and slices into nonsense."
+        )
 
     part.label = f"fascia-panel-{variant}"
     return part

@@ -106,7 +106,7 @@ opening's left edge to last opening's right edge, should read **156.02**.
 | temp_down | | 107.83 | 0 | |
 | temp_up | | 128.41 | 0 | |
 | wrinkle_guard | | 145.39 | 0 | |
-| keylock | | | | turned on its side; **which edge is the hinge?** |
+| keylock | | | | turned on its side. **Which edge has no slot?** That edge is the hinge. Currently taken as the left, tab running right, from `photos/08-keylock-region.jpg` |
 
 Names are read off the label photo, not measured. The 3 | 2 | 3 grouping fits
 the label if Wrinkle Guard sits alongside the Temperature pair rather than
@@ -133,6 +133,7 @@ tab near the middle, away from the cracks.
 | F6 | Slot width | 2.41 mm | uniform all round, tab edge to hole edge. Cross-checked: whole opening 10.63, so ~2.50 a side. Wide because moulding needs steel there |
 | F7 | Tab end radius | semicircular | **the free end only.** The hinge end is square, the sides straight, so the slot legs run parallel up to their end caps. Derived as half the tab width |
 | F8 | Tab face | flush, with a 5.25 circle | pad flush with the panel face, tab's flat recessed around it. The pad is as wide as the tab, and sits **low on it, not centred** |
+| F12 | Bump height above the tab flat | 1.73 mm | so on a 2.73 panel the tab flat is about 1.0 thick. **This is the flexure**: the tab is thin over its whole length with a boss to press on, not a full-thickness slab |
 | F11 | Hinge line to pad centre | derived | the pad is as wide as the tab and sits on its semicircular free end, so it is that end cap: `button_height - tab_end_radius` = 7.695. Worth confirming |
 | F9 | Hinge line to top edge | 41.14 mm | above the hinge line |
 | F10 | Hinge line to bottom edge | 55.58 mm | below the hinge line, past the LED row |
@@ -159,20 +160,24 @@ Around twelve, in a row above the buttons. **Confirm the count and the order
 against the board** &mdash; the names below are read off the printed label and
 the grouping is not certain.
 
-| LED | Board ref | X | Y | Colour |
-|---|---|---|---|---|
-| delay_9hr | | | | |
-| delay_6hr | | | | |
-| delay_3hr | | | | |
-| keylock | | | | |
-| power | | | | |
-| dry_timed | | | | |
-| dry_light | | | | |
-| dry_extra | | | | |
-| temp_airing | | | | |
-| temp_low | | | | |
-| temp_reg | | | | |
-| wrinkle_guard | | | | |
+Thirteen, grouped **1 | 3 | 4 | 1 | [keylock tab] | 1 | 3**, that last three
+very close together. Named positionally until the label mapping is confirmed.
+
+| LED | Board ref | Pitch from previous | Colour |
+|---|---|---|---|
+| led01 | | &mdash; | |
+| led02 | | | |
+| led03 | | | |
+| led04 | | | |
+| led05 | | | |
+| led06 | | | |
+| led07 | | | |
+| led08 | | | |
+| led09 | | | |
+| led10 | | | *past the keylock tab* |
+| led11 | | | |
+| led12 | | | |
+| led13 | | | |
 
 Also needed: LED body diameter, and how far the LED tips stand above the board.
 

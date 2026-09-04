@@ -144,20 +144,35 @@ def flexure_slot(p: Params, sw: Switch) -> Part:
     return _place(sw) * Pos(0, 0, -1) * solid
 
 
-def flexure_hinge_relief(p: Params, sw: Switch) -> Part | None:
-    """Thinning cut across the hinge, taken from the back face.
+def flexure_relief(p: Params, sw: Switch) -> Part | None:
+    """Thin the tab and its hinge, taken from the back face.
 
-    Sits just above the slot end caps, where the tab first becomes joined to
-    the panel, and spans the whole opening so the bend is not forced into the
-    corners left either side of the legs.
+    The whole tab is thinned, not just a band across the hinge. That is what
+    makes it flexible: a tab left at full panel thickness barely bends at all
+    and forces every bit of movement into whatever line was thinned, which is
+    where it would eventually crack.
+
+    Cut from the back, so the front face stays flat for the label. The original
+    recesses the front instead and stands a bump back up out of it, which is
+    the same mechanics but would print as an unsupported ring.
     """
-    depth = p.thickness - p.hinge_thickness
+    depth = p.thickness - p.tab_thickness
     if depth <= 0:
         return None
-    relief = Box(
-        p.button_width + 2 * p.flexure_slot, p.hinge_band, depth, align=_BOTTOM
+
+    # Out to the slot's outer edge, which is the tab and nothing else, then on
+    # past the hinge line by `hinge_band` to give the bend somewhere to happen.
+    region = _tab_outline(p, grow=p.flexure_slot)
+    band = Pos(0, p.hinge_band / 2) * Rectangle(
+        p.button_width + 2 * p.flexure_slot, p.hinge_band
     )
-    return _place(sw) * Pos(0, p.flexure_slot / 2 + p.hinge_band / 2, 0) * relief
+    relief = extrude(region + band, depth)
+
+    if p.hinge_gauge < p.tab_thickness:
+        deeper = extrude(band, p.thickness - p.hinge_gauge)
+        relief += deeper
+
+    return _place(sw) * relief
 
 
 def flexure_pad(p: Params, sw: Switch) -> Part | None:

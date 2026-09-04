@@ -130,26 +130,47 @@ _BUTTON_PITCHES = (
 
 _SWITCHES = tuple(
     Switch(name, x, y) for name, x, y in _row(_BUTTON_NAMES, _BUTTON_PITCHES, 0.0)
-) + (
-    # Turned on its side and sitting down among the LEDs rather than on the
-    # button line. Same tab size as the rest. PLACEHOLDER position, and the
-    # rotation sign still needs settling: which edge is its hinge?
-    Switch("keylock", 140.0, -16.0, rotation=90.0),
 )
 
-_LEDS = (
-    Led("delay_9hr", -1.0, -16.0),
-    Led("delay_6hr", 6.0, -16.0),
-    Led("delay_3hr", 13.0, -16.0),
-    Led("keylock", 25.0, -16.0),
-    Led("power", 38.0, -16.0),
-    Led("dry_timed", 55.0, -16.0),
-    Led("dry_light", 69.0, -16.0),
-    Led("dry_extra", 83.0, -16.0),
-    Led("temp_airing", 101.0, -16.0),
-    Led("temp_low", 115.0, -16.0),
-    Led("temp_reg", 129.0, -16.0),
-    Led("wrinkle_guard", 152.8, -16.0),
+#: The LED row, 13 across, grouped 1 | 3 | 4 | 1 | [keylock tab] | 1 | 3, with
+#: that last three sitting very close together. Named positionally on purpose:
+#: which label belongs to which is still to be confirmed, and reading them off
+#: a photo has already produced one wrong grouping.
+_LED_NAMES = tuple(f"led{i:02d}" for i in range(1, 14))
+
+#: Centre to centre along the row. All PLACEHOLDER: only the grouping is known,
+#: the spacings are shaped to it so the preview reads correctly.
+_LED_PITCHES = (
+    14.0,  # 1 -> group of 3
+    7.0,
+    7.0,
+    14.0,  # -> group of 4
+    7.0,
+    7.0,
+    7.0,
+    14.0,  # -> lone LED
+    32.0,  # -> past the keylock tab, which needs room for its whole length
+    16.0,
+    10.0,  # -> the close-set three
+    5.0,
+    5.0,
+)[:12]
+
+_LEDS = tuple(
+    Led(name, x, y) for name, x, y in _row(_LED_NAMES, _LED_PITCHES, -16.0)
+)
+
+#: The keylock tab sits in the LED row, between the lone LED at index 8 and the
+#: one at index 9. Derived from them rather than measured separately, so it
+#: cannot drift out of the row when their spacings are corrected.
+#:
+#: Turned on its side, the tab runs off its hinge along +x, so the hinge is set
+#: back half a tab length to leave it centred in the gap. PLACEHOLDER, like the
+#: spacings it comes from, and the hinge edge is still unconfirmed.
+_KEYLOCK_X = (_LEDS[8].x + _LEDS[9].x) / 2 - 10.57 / 2
+
+_SWITCHES = _SWITCHES[:8] + (
+    Switch("keylock", _KEYLOCK_X, _LEDS[8].y, rotation=90.0),
 )
 
 
@@ -280,8 +301,22 @@ class Params:
     #: nozzle widths instead. Open it back out towards 2.41 if the tabs come
     #: off the bed fused to the panel.
     flexure_slot: float = 1.2
+    #: What the tab is thinned to, over its whole length. This is the flexure:
+    #: the original's tab flat sits 1.73 below a bump that is flush with the
+    #: face, so on a 2.73 panel the tab is about 1.0 thick. A full-thickness
+    #: tab with one thinned line across it forces all the bending into that
+    #: line; the original spreads it along a thin tab.
+    #:
+    #: Thinned from the *back*, where the original recesses the front. Same
+    #: mechanics, but the front stays flat for the label and it prints as a
+    #: pocket rather than an unsupported annulus hanging off the bump.
+    tab_thickness: float = 1.0
+    #: How far the thinning runs past the hinge line into the panel.
     hinge_band: float = 2.0
-    hinge_thickness: float = 0.8
+    #: Thickness across the hinge band itself. None keeps it the same as the
+    #: tab, which is what the original does. Thinner is a softer action, and is
+    #: the first knob to turn if the test prints feel stiff.
+    hinge_thickness: float | None = None
     #: The pressed pad is a circle as wide as the tab itself, sitting low on
     #: it. Since the tab ends in a semicircle of the same radius, the pad is
     #: exactly that end cap. None follows the tab width rather than repeating
@@ -336,6 +371,13 @@ class Params:
             Led(led.name, led.x + self.cluster_x, led.y + self.cluster_y, led.aperture)
             for led in self.leds
         )
+
+    @property
+    def hinge_gauge(self) -> float:
+        """Thickness across the hinge band, defaulting to the tab's own."""
+        if self.hinge_thickness is not None:
+            return self.hinge_thickness
+        return self.tab_thickness
 
     @property
     def tab_end_radius(self) -> float:
