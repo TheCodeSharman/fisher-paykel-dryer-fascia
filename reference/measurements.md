@@ -169,7 +169,16 @@ the LED row against the button row, so without this the whole row could be
 right in its spacings and still sit sideways of where it belongs.
 
 Pitches are centre to centre, measured left edge to left edge, which is the
-same thing only while every hole is one diameter. The span from `led09` to
+same thing only while every hole is one diameter.
+
+**The keylock gap is the tight spot.** `led09` to `led10` measures about 20.20,
+and that has to hold the keylock's tab and slot (12.97) plus half a light post
+at each end. With the placeholder post size that comes to 20.17, leaving a
+hundredth of a millimetre at each side, which is arithmetic rather than design.
+Two things resolve it: **D**, since a smaller LED means smaller posts and real
+clearance, and a better reading of the 20.20 itself, which is a guess because
+that hole is clipped on its left edge. If it stays this tight, the posts near
+the keylock can be trimmed or dropped. The span from `led09` to
 `led10` is taken in two parts, either side of the keylock opening, so it gives
 the keylock's position at the same time.
 

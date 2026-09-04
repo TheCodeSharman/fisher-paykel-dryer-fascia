@@ -149,7 +149,8 @@ _LED_PITCHES = (
     10.91,  # led06 -> led07, measured, same again
     10.91,  # led07 -> led08, measured, closes the group of four
     28.65,  # led08 -> led09, measured, the gap to the lone LED
-    32.0,  # -> past the keylock tab, which needs room for its whole length
+    20.20,  # led09 -> led10, APPROXIMATE: spans the keylock, and the hole
+            # is clipped on its left edge so the reading is a guess
     16.0,
     10.0,  # -> the close-set three
     5.0,
