@@ -54,7 +54,7 @@ EPROM: `ED56 427318270820`.
 | Opening height | | |
 | Overlap onto sound fascia | | how far the new panel laps over the old on each side |
 | Panel thickness | | thickness of the original fascia beside the break |
-| Depth from fascia face to board | | cross-check on F13, which already gives it |
+| Switch posts proud of the dryer face | 8.95 mm | the PCB is flush with the dryer's front face and the posts stand this far off it |
 
 ## Screw positions
 
@@ -98,7 +98,7 @@ opening's left edge to last opening's right edge, should read **156.02**.
 
 | Button | Board ref | X | Y | Rotation |
 |---|---|---|---|---|
-| delay_start | | 0.00 | 0 | |
+| delay_start | | 0.00 | 0 | all eight hinge lines confirmed colinear |
 | power | | 20.58 | 0 | |
 | start_pause | | 37.56 | 0 | |
 | dryness_down | | 62.62 | 0 | |
@@ -106,7 +106,7 @@ opening's left edge to last opening's right edge, should read **156.02**.
 | temp_down | | 107.83 | 0 | |
 | temp_up | | 128.41 | 0 | |
 | wrinkle_guard | | 145.39 | 0 | |
-| keylock | | | | turned on its side. **Which edge has no slot?** That edge is the hinge. Currently taken as the left, tab running right, from `photos/08-keylock-region.jpg` |
+| keylock | | | | hinged on its **left** edge, the one with no slot, so the tab runs to the right |
 
 Names are read off the label photo, not measured. The 3 | 2 | 3 grouping fits
 the label if Wrinkle Guard sits alongside the Temperature pair rather than
@@ -134,7 +134,7 @@ tab near the middle, away from the cracks.
 | F7 | Tab end radius | semicircular | **the free end only.** The hinge end is square, the sides straight, so the slot legs run parallel up to their end caps. Derived as half the tab width |
 | F8 | Tab face | flush, with a 5.25 circle | pad flush with the panel face, tab's flat recessed around it. The pad is as wide as the tab, and sits **low on it, not centred** |
 | F13 | Prong length | 3.19 mm | how far the plunger stands off the back face. Since the tab's back is flush with the panel's, this is the whole depth chain: the switch sits 3.69 down once pre-travel is allowed |
-| F14 | Light cup depth | | the same reading for an LED tunnel. Wanted: the cups stand further off the back than the prongs, but by how much is a guess |
+| F14 | Light cup depth | 2.64 mm | how far a light tunnel stands off the back. **Shorter than the prongs**, not longer as the underside photo suggested |
 | F12 | Bump height above the tab flat | 1.73 mm | so on a 2.73 panel the tab flat is about 1.0 thick. **This is the flexure**: the tab is thin over its whole length with a boss to press on, not a full-thickness slab |
 | F11 | Hinge line to pad centre | derived | the pad is as wide as the tab and sits on its semicircular free end, so it is that end cap: `button_height - tab_end_radius` = 7.695. Worth confirming |
 | F9 | Hinge line to top edge | 41.14 mm | above the hinge line |

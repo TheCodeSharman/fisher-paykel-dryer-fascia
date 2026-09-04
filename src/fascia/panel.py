@@ -1,21 +1,21 @@
 """The fascia panel itself.
 
-The original fascia is discarded entirely. This part screws straight to holes
-drilled in the dryer's skin, which means it has to span the distance down to
-the control board on its own. So it is a shallow tray, not a plate:
+The original fascia is discarded. This part screws straight to holes drilled in
+the dryer's front face, and the PCB is flush with that face with its switch
+posts standing proud of it. So the plate cannot lie on the face: it is carried
+clear of the posts on walls, with a lip returning to the face for the screws.
 
-    flange  -----____                    ____-----   z = 0, on the dryer skin
-                     |                  |
-                     | wall             | wall
-                     |__________________|
-                        front plate                  z = -reach
+        ______________________________  front plate, at plate_standoff
+       |                              |
+    ___|                              |___    walls
+   |___    ____________________________   |__ lip, on the dryer face, z = 0
+       |  |                            |  |
+       |  |  switch posts, 8.95 proud  |  |
+   ========================================== dryer front face, PCB flush
 
-The flange lands on the skin and takes the screws. The walls carry the front
-plate down into the machine by `reach`, leaving `switch_gap` between the back
-of the plate and the switch tops for the plungers to cross. The label goes on
-the front plate, at the bottom of the well.
-
-See `params` for the full coordinate system and dimension chain.
+Everything the plate carries -- plungers, light posts -- hangs off its back
+into that space. See `params` for the coordinate system: z = 0 is the dryer's
+front face and grows towards you.
 """
 
 import math
@@ -53,31 +53,31 @@ def _slab(width: float, height: float, radius: float, depth: float, z: float) ->
 
 
 def body(p: Params) -> Part:
-    """The front plate, and the skirt behind it if there is one.
+    """Plate, walls and lip, before any features are cut.
 
-    A flat plate, not a tray. Its own perimeter is the flange that lands on the
-    dryer skin and takes the screws, so nothing stands proud of the front face.
-    Everything the panel adds -- skirt, plungers, light posts -- projects
-    backwards, into the machine.
+    Hollow: the switch posts and the LEDs live in the space the walls enclose.
     """
-    plate = _slab(p.width, p.height, p.corner_radius, p.thickness, z=-p.reach)
-    if p.skirt_depth <= 0:
-        return plate
+    plate = _slab(p.width, p.height, p.corner_radius, p.thickness, z=p.plate_standoff)
 
-    i = p.skirt_inset
-    radius = max(p.corner_radius - i, 1.0)
-    outer = _slab(
-        p.width - 2 * i, p.height - 2 * i, radius, p.skirt_depth, z=-p.reach - p.skirt_depth
+    walls = _slab(p.width, p.height, p.corner_radius, p.plate_standoff, z=0)
+
+    lip = Pos(-p.lip_width, -p.lip_width, 0) * _slab(
+        p.width + 2 * p.lip_width,
+        p.height + 2 * p.lip_width,
+        p.corner_radius + p.lip_width,
+        p.lip_thickness,
+        z=0,
     )
-    inner = _slab(
-        p.width - 2 * i - 2 * p.skirt_wall,
-        p.height - 2 * i - 2 * p.skirt_wall,
-        max(radius - p.skirt_wall, 0.5),
-        p.skirt_depth,
-        z=-p.reach - p.skirt_depth,
+
+    hollow = Pos(p.wall, p.wall, 0) * _slab(
+        p.width - 2 * p.wall,
+        p.height - 2 * p.wall,
+        max(p.corner_radius - p.wall, 0.5),
+        p.plate_standoff,
+        z=0,
     )
-    skirt = Pos(i, i, 0) * outer - Pos(i + p.skirt_wall, i + p.skirt_wall, 0) * inner
-    return plate + skirt
+
+    return (plate + walls + lip) - hollow
 
 
 def label_recess(p: Params) -> Part:
@@ -88,19 +88,19 @@ def label_recess(p: Params) -> Part:
         p.height - 2 * m,
         radius=max(p.corner_radius - m, 1.0),
         depth=p.label_recess_depth,
-        z=-p.reach + p.thickness - p.label_recess_depth,
+        z=p.plate_standoff + p.thickness - p.label_recess_depth,
     )
     return Pos(m, m, 0) * pocket
 
 
 def countersunk_hole(p: Params, hole: ScrewHole) -> Part:
-    """Clearance hole through the flange, countersunk at its outer face."""
-    shank = Pos(0, 0, -p.reach - 1) * Cylinder(
-        p.screw_shank / 2, p.thickness + 2, align=_BOTTOM
+    """Clearance hole through the lip, countersunk on the side facing out."""
+    shank = Pos(0, 0, -1) * Cylinder(
+        p.screw_shank / 2, p.lip_thickness + 2, align=_BOTTOM
     )
 
     # A 90-degree countersink drops 1mm for every 1mm of radius it gains.
-    sink = Pos(0, 0, -p.reach + p.thickness) * Cone(
+    sink = Pos(0, 0, p.lip_thickness) * Cone(
         bottom_radius=p.screw_shank / 2,
         top_radius=p.screw_head / 2,
         height=(p.screw_head - p.screw_shank) / 2,
@@ -126,7 +126,7 @@ def light_post(p: Params, led: Led) -> Part | None:
     post = Cylinder(
         led.aperture / 2 + p.tunnel_wall, length + p.thickness, align=_BOTTOM
     )
-    return Pos(led.x, led.y, -p.reach - length) * post
+    return Pos(led.x, led.y, p.plate_standoff - length) * post
 
 
 def led_bezel(p: Params, led: Led) -> Part:
@@ -136,8 +136,8 @@ def led_bezel(p: Params, led: Led) -> Part:
     across it, so there is nothing to leave a land on. The chamfer only breaks
     the front edge so it does not read as a raw drilling.
     """
-    face = -p.reach + p.thickness
-    bottom = -p.reach - max(p.tunnel_length, 0.0) - 1
+    face = p.plate_standoff + p.thickness
+    bottom = p.plate_standoff - max(p.tunnel_length, 0.0) - 1
 
     bore = Pos(0, 0, bottom) * Cylinder(led.aperture / 2, face - bottom, align=_BOTTOM)
     chamfer = Pos(0, 0, face) * Cone(
@@ -156,7 +156,7 @@ def _check_features_fit(p: Params) -> None:
     is a hole cut through the border the screws land in, which is obvious in
     the viewer but easy to miss in a batch of exports.
     """
-    x0 = y0 = p.edge_margin
+    x0 = y0 = p.wall + p.edge_margin
     x1, y1 = p.width - x0, p.height - y0
 
     # Conservative and rotation-independent: the circle the tab opening fits in.
@@ -221,16 +221,12 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
     """Build the panel for one button strategy."""
     if variant not in VARIANTS:
         raise ValueError(f"unknown variant {variant!r}, expected one of {VARIANTS}")
-    if p.reach < 0:
+    if p.plunger_length <= 0:
+        raise ValueError(f"plunger_length {p.plunger_length} is not positive")
+    if p.tunnel_length >= p.plate_standoff:
         raise ValueError(
-            f"reach {p.reach} is negative, which would stand the plate off the "
-            f"dryer skin with nothing under it"
-        )
-    if p.switch_gap <= p.pre_travel:
-        raise ValueError(
-            f"switch_gap is {p.switch_gap}: the front plate would sit on the "
-            f"switches. Reduce reach ({p.reach}) or recheck skin_to_switch "
-            f"({p.skin_to_switch})."
+            f"a light tunnel {p.tunnel_length} long would reach past the dryer "
+            f"face, which is {p.plate_standoff} below the plate"
         )
 
     _check_features_fit(p)
@@ -241,12 +237,12 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
     if p.label_recess_depth > 0:
         part -= label_recess(p)
 
-    for hole in p.screws:
+    for hole in p.placed_screws:
         part -= countersunk_hole(p, hole)
 
     # Features in the front plate are modelled in plate-local coordinates,
     # where z runs 0 to `thickness`, then dropped to where the plate sits.
-    to_plate = Pos(0, 0, -p.reach)
+    to_plate = Pos(0, 0, p.plate_standoff)
 
     # Posts go on solid, then every LED is drilled through plate and post in
     # one go, so no boolean ever has to resolve two coincident cylinders.
@@ -267,7 +263,7 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
             if pad is not None:
                 part += to_plate * pad
             at = buttons.switch_point(p, sw)
-            part += at * Pos(0, 0, -p.reach + p.thickness) * buttons.plunger(
+            part += at * Pos(0, 0, p.plate_standoff + p.thickness) * buttons.plunger(
                 p, overlap=p.thickness
             )
         else:
@@ -292,7 +288,7 @@ def make_caps(p: Params) -> list[Part]:
     """The loose button caps for the `separate` variant, one per switch."""
     caps = []
     for sw in p.placed_switches:
-        c = Pos(0, 0, -p.reach) * buttons.cap(p, sw)
+        c = Pos(0, 0, p.plate_standoff) * buttons.cap(p, sw)
         c.label = f"button-cap-{sw.name}"
         caps.append(c)
     return caps

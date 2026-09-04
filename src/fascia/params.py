@@ -14,13 +14,15 @@ X and Y have their origin at the bottom-left corner of the panel outline, so
 feature positions can be taken straight off the calipers as offsets from that
 corner.
 
-**z = 0 is the dryer's outer skin**, the surface the flange is screwed down
-onto. Everything inside the machine is negative, so the control board sits at
-negative z and `skin_to_switch` is a positive number measured inwards.
+**z = 0 is the dryer's front face**, the surface the lip is screwed down onto.
+The PCB is flush with it and the switch posts stand *proud* of it, so
+everything of interest is at positive z, growing towards you.
 
-The part is a tray, not a plate. It screws to holes drilled in the dryer and
-must itself span the distance down to the switches, so `reach` and
-`skin_to_switch` together decide whether the buttons touch. See `switch_gap`.
+That is what shapes the part. The plate cannot lie on the face, because the
+switch posts are in the way; it is held clear of them on walls, with a lip
+returning to the face to take the screws. `plate_standoff` is where the plate's
+back face has to sit, and it falls out of the measurements rather than being
+chosen.
 
 Values marked PLACEHOLDER are guesses, sized so the model builds and can be
 eyeballed in the viewer. Replace them with real caliper readings and record how
@@ -175,6 +177,8 @@ _LEDS = tuple(
 _KEYLOCK_X = (_LEDS[8].x + _LEDS[9].x) / 2 - 10.57 / 2
 
 _SWITCHES = _SWITCHES[:8] + (
+    # Hinged on its left edge, which is the one with no slot, so the tab runs
+    # off to the right. Confirmed on the part.
     Switch("keylock", _KEYLOCK_X, _LEDS[8].y, rotation=90.0),
 )
 
@@ -195,44 +199,30 @@ class Params:
     #: measured 2.73 on its return edge; rounded up to 14 layers at 0.2 so the
     #: slicer is not left with a part layer to fudge.
     thickness: float = 2.8
-    #: How close a feature may come to the panel edge, leaving a border for the
-    #: screws to land in. The plate's own perimeter is the flange.
-    edge_margin: float = 8.0
-
-    #: A skirt dropping off the back of the plate into the opening, to locate
-    #: the panel and stiffen it. Zero until the opening is measured; nothing
-    #: about the fit is known yet, and a skirt that does not fit is worse than
-    #: none.
-    skirt_depth: float = 0.0
-    skirt_inset: float = 6.0
-    skirt_wall: float = 2.0
+    #: How close a feature may come to the inside of the walls.
+    edge_margin: float = 4.0
+    #: The walls carrying the plate clear of the switch posts.
+    wall: float = 2.5
+    #: The lip at their base, lying on the dryer's front face and taking the
+    #: screws. It stands out beyond the panel so a screwdriver can reach.
+    lip_width: float = 9.0
+    lip_thickness: float = 2.4
 
     # ------------------------------------------------------------------
-    # Depth. The chain that decides whether the buttons reach the switches.
+    # Depth. All three measured, so the standoff is not a judgement call.
     #
-    #   skin_to_switch   how far the switch tops are below the dryer skin
-    #   reach            how far the front plate sits below the dryer skin
-    #   switch_gap       what is left for the plunger  (= the difference)
-    #
-    # `reach` is ours to choose; `skin_to_switch` has to be measured on the
-    # machine with the board in place.
+    #   switch_height   the switch posts, proud of the dryer's front face
+    #   plunger_length  the prong on the back of each tab
+    #   plate_standoff  where the plate's back face lands (derived)
     # ------------------------------------------------------------------
-    #: Derived from the original rather than guessed: its prong stands 3.19
-    #: off a back face flush with the panel's, so with `pre_travel` allowed for
-    #: the switch sits 3.69 down. Holds as long as the new panel's back face
-    #: lands where the old fascia's did, which round 3 confirms on the machine.
-    skin_to_switch: float = 3.69
-    #: PLACEHOLDER, and now the odd one out. The underside photo shows the
-    #: light cups standing further off the back than the prongs do, so this
-    #: should be more than `skin_to_switch`, but by how much is unmeasured.
-    #: The equivalent reading to take is the depth of one cup.
-    skin_to_led: float = 8.0
-    #: How far the plate's *back* face sits below the dryer skin. Zero lays it
-    #: flat on the skin with its front face outermost, which is what the panel
-    #: wants to be: nothing stands proud of the face for a finger to catch.
-    #: Sinking it keeps the plungers short but starts to bury the buttons, and
-    #: past `thickness` the face drops below the skin altogether.
-    reach: float = 0.0
+    #: The PCB is flush with the dryer's front face and the switch posts stand
+    #: this far proud of it.
+    switch_height: float = 8.95
+    #: The prong on the back of each tab, taken from the original.
+    plunger_length: float = 3.19
+    #: How far a light tunnel stands off the back of the plate, also from the
+    #: original. Shorter than the prongs, not longer as the photo suggested.
+    tunnel_length: float = 2.64
 
     # ------------------------------------------------------------------
     # Label
@@ -252,14 +242,9 @@ class Params:
     # ------------------------------------------------------------------
     screw_shank: float = 3.4  # clearance hole for an M3 / #6 self-tapper
     screw_head: float = 6.4  # countersunk head diameter at the front face
-    screws: tuple[ScrewHole, ...] = field(
-        default_factory=lambda: (  # PLACEHOLDER positions, must sit on the flange
-            ScrewHole("bl", 5.0, 5.0),
-            ScrewHole("br", 185.0, 5.0),
-            ScrewHole("tl", 5.0, 55.0),
-            ScrewHole("tr", 185.0, 55.0),
-        )
-    )
+    #: Empty means the four derived below. Positions are in panel coordinates,
+    #: so the lip band is at negative x/y and beyond width/height.
+    screws: tuple[ScrewHole, ...] = ()
 
     # ------------------------------------------------------------------
     # Board features
@@ -282,8 +267,6 @@ class Params:
     # ------------------------------------------------------------------
     led_chamfer: float = 0.6
     tunnel_wall: float = 1.0
-    #: Clearance left between the end of a tunnel and the tip of its LED.
-    tunnel_gap: float = 1.5
 
     # ------------------------------------------------------------------
     # Buttons: shared
@@ -429,17 +412,32 @@ class Params:
         return self.button_height - self.tab_end_radius
 
     @property
-    def switch_gap(self) -> float:
-        """Clear distance from the back of the front plate to the switch tops.
+    def placed_screws(self) -> tuple[ScrewHole, ...]:
+        """Screw positions, defaulting to four in the lip band.
 
-        The single number that decides whether the buttons work. The plunger
-        fills all but `pre_travel` of it.
+        Kept away from the corners, where the lip is turning through its
+        radius and there is least meat around a hole.
         """
-        return self.skin_to_switch - self.reach
+        if self.screws:
+            return self.screws
+        mid = self.lip_width / 2
+        return (
+            ScrewHole("bl", self.width * 0.2, -mid),
+            ScrewHole("br", self.width * 0.8, -mid),
+            ScrewHole("tl", self.width * 0.2, self.height + mid),
+            ScrewHole("tr", self.width * 0.8, self.height + mid),
+        )
 
     @property
-    def plunger_length(self) -> float:
-        return self.switch_gap - self.pre_travel
+    def plate_standoff(self) -> float:
+        """Where the plate's back face sits above the dryer's front face.
+
+        Derived, not chosen: the switch posts fix the floor, the prong fixes
+        its own length, and `pre_travel` keeps the plunger off the switch at
+        rest. Getting this wrong either misses the switches or holds them
+        permanently pressed.
+        """
+        return self.switch_height + self.pre_travel + self.plunger_length
 
     @property
     def plunger_tip_sweep(self) -> float:
@@ -449,15 +447,11 @@ class Params:
         travels an arc rather than straight down. A long plunger amplifies a
         small rotation into real sideways movement, and if it exceeds the
         actuator's radius the plunger walks off the switch. That is the price
-        of a shallow `reach`.
+        the price of standing the plate a long way off the board.
         """
         angle = self.switch_travel / self.plunger_drop  # radians, small
         return self.plunger_length * angle
 
-    @property
-    def tunnel_length(self) -> float:
-        """How far a light tunnel drops before it reaches its LED."""
-        return self.skin_to_led - self.reach - self.tunnel_gap
 
 
 DEFAULT = Params()

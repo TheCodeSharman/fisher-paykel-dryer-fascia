@@ -41,8 +41,7 @@ _TOP = (Align.CENTER, Align.CENTER, Align.MAX)
 def plunger(p: Params, deduct: float = 0.0, overlap: float = 0.0) -> Part:
     """The boss reaching from the back of the front plate towards a switch.
 
-    Its free length comes from the depth chain in `Params`: whatever
-    `switch_gap` leaves once `pre_travel` and `deduct` are taken out. `deduct`
+    Its free length is measured, not derived: `plunger_length`. `deduct`
     accounts for anything standing between the plate and the start of the boss,
     such as a button cap's flange.
 
@@ -53,10 +52,8 @@ def plunger(p: Params, deduct: float = 0.0, overlap: float = 0.0) -> Part:
     length = p.plunger_length - deduct
     if length <= 0:
         raise ValueError(
-            f"a switch_gap of {p.switch_gap} (skin_to_switch {p.skin_to_switch} "
-            f"less reach {p.reach}) leaves no room for a plunger once "
-            f"{p.pre_travel} of pre-travel and {deduct} of anything else are "
-            f"taken out. Either reach less deep or check the measurements."
+            f"a plunger_length of {p.plunger_length} leaves nothing once "
+            f"{deduct} of anything else is taken out"
         )
     return Cylinder(p.plunger / 2, length + overlap, align=_TOP)
 
