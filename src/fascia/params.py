@@ -182,7 +182,7 @@ class Params:
     #: PLACEHOLDER. Provisionally the original fascia's height, F9 + F10, so
     #: the preview is proportioned like the real thing. What actually bounds
     #: the outline is the flat metal around the opening on the machine.
-    width: float = 200.0  # PLACEHOLDER
+    width: float = 240.0  # PLACEHOLDER
     height: float = 96.72  # PLACEHOLDER, = 41.14 + 55.58
     corner_radius: float = 4.0
 
