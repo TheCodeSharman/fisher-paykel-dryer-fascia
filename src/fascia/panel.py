@@ -130,23 +130,29 @@ def light_post(p: Params, led: Led) -> Part | None:
 
 
 def led_bezel(p: Params, led: Led) -> Part:
-    """The hole itself: a straight bore through plate and post, and a chamfer.
+    """The hole, the counterbore in front of it, and a chamfer on that.
 
-    A clearance hole for the LED to sit in, not a window with material left
-    across it, so there is nothing to leave a land on. The chamfer only breaks
-    the front edge so it does not read as a raw drilling.
+    Two diameters, not one: a narrow hole for the LED to sit in, opening out
+    into a wider counterbore at the face. The counterbore is what is seen and
+    what the label is drawn around.
     """
     face = p.plate_standoff + p.thickness
     bottom = p.plate_standoff - max(p.tunnel_length, 0.0) - 1
 
     bore = Pos(0, 0, bottom) * Cylinder(led.aperture / 2, face - bottom, align=_BOTTOM)
+
+    # The counterbore is what is seen from the front; the hole behind it only
+    # has to clear the LED.
+    counterbore = Pos(0, 0, face) * Cylinder(
+        p.led_counterbore / 2, p.led_counterbore_depth, align=_SINK
+    )
     chamfer = Pos(0, 0, face) * Cone(
-        bottom_radius=led.aperture / 2,
-        top_radius=led.aperture / 2 + p.led_chamfer,
+        bottom_radius=p.led_counterbore / 2,
+        top_radius=p.led_counterbore / 2 + p.led_chamfer,
         height=p.led_chamfer,
         align=_SINK,
     )
-    return Pos(led.x, led.y, 0) * (bore + chamfer)
+    return Pos(led.x, led.y, 0) * (bore + counterbore + chamfer)
 
 
 def _check_features_fit(p: Params) -> None:
@@ -172,7 +178,7 @@ def _check_features_fit(p: Params) -> None:
         ):
             strays.append(f"button {sw.name!r} at ({sw.x:.1f}, {sw.y:.1f})")
     for led in p.placed_leds:
-        post = led.aperture / 2 + p.tunnel_wall
+        post = p.led_footprint
         if not (x0 + post <= led.x <= x1 - post and y0 + post <= led.y <= y1 - post):
             strays.append(f"LED {led.name!r} at ({led.x:.1f}, {led.y:.1f})")
 
@@ -199,7 +205,7 @@ def _check_no_overlaps(p: Params) -> None:
         angle = math.radians(sw.rotation)
         cos_a, sin_a = math.cos(-angle), math.sin(-angle)
         for led in p.placed_leds:
-            post = led.aperture / 2 + p.tunnel_wall
+            post = p.led_footprint
             dx, dy = led.x - sw.x, led.y - sw.y
             # Into the tab's own frame: hinge at the origin, tab down -y.
             lx = dx * cos_a - dy * sin_a

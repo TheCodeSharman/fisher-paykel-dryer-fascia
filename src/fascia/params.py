@@ -57,10 +57,9 @@ class Led:
     name: str
     x: float
     y: float
-    #: Diameter of the hole. Measured at 3.35, a clearance hole for a 3mm LED
-    #: rather than a small window with material left across it, so the LED sits
-    #: in the hole and the label diffuses it.
-    aperture: float = 3.35
+    #: Diameter of the hole the LED sits in. The visible bezel is the wider
+    #: counterbore in front of it, not this.
+    aperture: float = 3.3
 
 
 @dataclass(frozen=True)
@@ -273,6 +272,12 @@ class Params:
     # ------------------------------------------------------------------
     led_chamfer: float = 0.6
     tunnel_wall: float = 1.0
+    #: A counterbore in the front face, wider than the hole behind it. This is
+    #: what reads as the bezel, and mistaking the hole for it is what made the
+    #: gaps between LEDs look too wide.
+    led_counterbore: float = 5.66
+    #: PLACEHOLDER: how deep that counterbore goes.
+    led_counterbore_depth: float = 1.0
 
     # ------------------------------------------------------------------
     # Buttons: shared
@@ -389,6 +394,14 @@ class Params:
         if self.hinge_thickness is not None:
             return self.hinge_thickness
         return self.tab_thickness
+
+    @property
+    def led_footprint(self) -> float:
+        """Radius an LED needs kept clear: the wider of counterbore and post."""
+        return max(
+            self.led_counterbore / 2,
+            max(led.aperture for led in self.leds) / 2 + self.tunnel_wall,
+        )
 
     @property
     def tab_end_radius(self) -> float:

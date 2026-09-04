@@ -279,6 +279,9 @@ nothing that matters any more.
    back towards the original's 2.41 on that account.
 
 6. ~~The hinge does not match the original.~~ It now does, near enough. The
+   slot legs run past the hinge line and end in caps of half the slot's width,
+   as the original's do; ours protrude 0.6 where the original's protrude 1.2,
+   because our slot is 1.2 against its 2.41. The
    tab is recessed from the front to leave `tab_thickness` of material, with
    the bump left standing at the panel face by cutting the recess around it.
    That is the original's arrangement: a thin tab over its whole length, a boss
@@ -289,19 +292,13 @@ nothing that matters any more.
    whether the hinge wants any relief past the tab (`hinge_band`, currently
    nothing). Print a strip of tabs at a few thicknesses and pick by feel.
 
-7. **The LED holes look bigger than 3.35.** `photos/10-fascia-front-holes.jpg`
-   scaled against the button openings, which are a known 10.57, puts them
-   around 4.5 to 5. The ratio is the clearer tell: in the photo the pitch is
-   roughly 2.2 hole diameters, where 3.35 against a 10.91 pitch gives 3.26.
-   That is what makes the gaps between bezels read as too wide.
+7. ~~The LED holes look bigger than 3.35.~~ Resolved: there are two diameters.
+   A 3.3 hole for the LED, and a 5.66 counterbore in front of it, which is what
+   is seen and what made the gaps read as too wide. Both are now modelled.
+   **The counterbore's depth is still a guess at 1.0** and wants measuring.
 
-   5.48 was the first answer given, then corrected to 3.35. The photo favours
-   the first. Possibly the two are the front opening and a bore behind it.
-   Worth one careful reading across a hole in the middle of a group, away from
-   the damage.
-
-   The pitches are not in doubt: the group of three is visibly wider-spaced
-   than the group of four in the photo, which is 11.54 against 10.91.
+   It leaves only 0.32 of face between the close-set three, which is thin but
+   is what the original does.
 
 8. **The right-hand LEDs hang off one uncertain reading.** `led09` to `led10`
    was taken as 20.20 and flagged a guess, because the tab clips that hole's
