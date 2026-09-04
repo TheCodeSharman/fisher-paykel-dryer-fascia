@@ -244,12 +244,8 @@ class Params:
     # ------------------------------------------------------------------
     # Buttons: shared
     # ------------------------------------------------------------------
-    button_width: float = 5.63  # measured, F4
+    button_width: float = 5.75  # measured, F4 refined
     button_height: float = 10.57  # measured, F5
-    #: Confirmed semicircular (F7), so this is half the width. `_tab_outline`
-    #: clamps it just under that, since RectangleRounded will not take exactly
-    #: half a side.
-    button_radius: float = 2.815
     #: Boss on the back of the button that reaches down to the switch. It has
     #: to fit inside a tab only 5.63 wide, and land on the switch actuator, so
     #: check it against both. PLACEHOLDER until the actuator is measured.
@@ -263,10 +259,10 @@ class Params:
     #: How far below the hinge line the plunger sits. Further down means more
     #: leverage and a lighter press. None puts it at the middle of the tab.
     #:
-    #: PLACEHOLDER. The original's bump is not centred on the tab, it sits low
-    #: on it, so this is set to put a pad of `flexure_pad_diameter` near the
-    #: free end with a little margin. Wants the real hinge-to-pad-centre.
-    plunger_offset: float | None = 7.3
+    #: None puts it at the centre of the tab's lower end cap, which is where
+    #: the original's bump sits: same radius as the tab, tangent to the free
+    #: end. Set a number to override.
+    plunger_offset: float | None = None
 
     # ------------------------------------------------------------------
     # Buttons: "flexure" variant, replicating the original F&P design.
@@ -286,10 +282,11 @@ class Params:
     flexure_slot: float = 1.2
     hinge_band: float = 2.0
     hinge_thickness: float = 0.8
-    #: The pressed pad is a circle on the tab, measured at 5.25 across (F8),
-    #: which is as good as the full 5.63 tab width once a moulded edge
-    #: radius is allowed for. It sits low on the tab, not centred.
-    flexure_pad_diameter: float = 5.25
+    #: The pressed pad is a circle as wide as the tab itself, sitting low on
+    #: it. Since the tab ends in a semicircle of the same radius, the pad is
+    #: exactly that end cap. None follows the tab width rather than repeating
+    #: it, so refining `button_width` carries the pad with it.
+    flexure_pad_diameter: float | None = None
     #: How far that pad stands proud of the front face.
     #:
     #: Zero, and deliberately. The original is flush at the top, and the front
@@ -341,11 +338,31 @@ class Params:
         )
 
     @property
+    def tab_end_radius(self) -> float:
+        """The tab's free end is a semicircle, so half its width (F7).
+
+        Derived rather than stored: the two cannot then drift apart, and the
+        hinge end is square, so there is no second radius to keep track of.
+        """
+        return self.button_width / 2
+
+    @property
+    def pad_diameter(self) -> float:
+        """The pressed pad is as wide as the tab unless told otherwise."""
+        if self.flexure_pad_diameter is not None:
+            return self.flexure_pad_diameter
+        return self.button_width
+
+    @property
     def plunger_drop(self) -> float:
-        """Distance from the hinge line down to the plunger centre."""
+        """Distance from the hinge line down to the plunger centre.
+
+        Defaults to the centre of the tab's lower end cap, where the original
+        puts its bump, rather than the middle of the tab.
+        """
         if self.plunger_offset is not None:
             return self.plunger_offset
-        return self.button_height / 2
+        return self.button_height - self.tab_end_radius
 
     @property
     def switch_gap(self) -> float:

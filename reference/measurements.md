@@ -128,12 +128,12 @@ tab near the middle, away from the cracks.
 | # | What | Value | How taken |
 |---|---|---|---|
 | F3 | Face thickness | 2.73 mm | **on the wrap-around return edge, not the face.** Assumed equal to the face; confirm at the crack that runs through the face |
-| F4 | Tab width | 5.63 mm | across the tab, inside the slot |
+| F4 | Tab width | 5.75 mm | across the tab, inside the slot. Cross-checks: 5.75 + 2 x 2.41 = 10.57 against a measured opening of 10.63 |
 | F5 | Tab height | 10.57 mm | hinge line to the free end. **The hinge is at the top and the tab hangs down**, so the tab occupies negative Y |
 | F6 | Slot width | 2.41 mm | uniform all round, tab edge to hole edge. Cross-checked: whole opening 10.63, so ~2.50 a side. Wide because moulding needs steel there |
-| F7 | Tab corner radius | semicircular | so half the tab width, 2.815 |
+| F7 | Tab end radius | semicircular | **the free end only.** The hinge end is square, the sides straight, so the slot legs run parallel up to their end caps. Derived as half the tab width |
 | F8 | Tab face | flush, with a 5.25 circle | pad flush with the panel face, tab's flat recessed around it. The pad is as wide as the tab, and sits **low on it, not centred** |
-| F11 | Hinge line to pad centre | | wanted: sets the leverage and where the plunger lands. Currently guessed at 7.3 |
+| F11 | Hinge line to pad centre | derived | the pad is as wide as the tab and sits on its semicircular free end, so it is that end cap: `button_height - tab_end_radius` = 7.695. Worth confirming |
 | F9 | Hinge line to top edge | 41.14 mm | above the hinge line |
 | F10 | Hinge line to bottom edge | 55.58 mm | below the hinge line, past the LED row |
 

@@ -67,32 +67,34 @@ def plunger(p: Params, deduct: float = 0.0, overlap: float = 0.0) -> Part:
 
 
 def _tab_outline(p: Params, grow: float = 0.0) -> Sketch:
-    """The tab profile, optionally grown or shrunk all round by `grow`.
+    """The tab profile, hinge line on y = 0, hanging down the negative y axis.
 
-    The radius is clamped to what the rectangle can actually carry. The tabs
-    are narrow, so a radius that suits the full outline will not survive being
-    shrunk for the raised pad, and `RectangleRounded` will not accept a radius
-    of half the side or more.
+    Straight parallel sides and a semicircular free end. Only that end is
+    rounded: at the hinge the tab simply merges into the panel, so rounding
+    there would pull the slot legs inwards instead of letting them run straight
+    up to their end caps.
+
+    `grow` offsets the whole profile outwards, which is how the slot is built.
+    The free end's centre does not move under that, so the gap stays even all
+    the way round, as the original's does.
     """
-    width = p.button_width + 2 * grow
-    height = p.button_height + 2 * grow
-    if width <= 0 or height <= 0:
+    radius = p.tab_end_radius + grow
+    if radius <= 0:
         raise ValueError(
-            f"a tab of {p.button_width} x {p.button_height} cannot be grown by "
-            f"{grow}: that leaves {width} x {height}"
+            f"a tab {p.button_width} wide cannot be grown by {grow}: that "
+            f"leaves an end radius of {radius}"
         )
-    radius = min(p.button_radius + grow, width / 2 - 0.01, height / 2 - 0.01)
-    return RectangleRounded(width, height, max(radius, 0.01))
 
+    end_centre = -(p.button_height - p.tab_end_radius)
+    top = grow
+    if top <= end_centre:
+        raise ValueError(
+            f"growing a {p.button_height} tab by {grow} collapses it: the "
+            f"straight part would run from {top} down to {end_centre}"
+        )
 
-def _tab_at(p: Params, grow: float = 0.0) -> Sketch:
-    """The tab profile placed relative to its hinge line, which is at y = 0.
-
-    The tab hangs *down* from the hinge, matching the original, so it occupies
-    negative y. Growing the outline pushes it above the hinge line too; the
-    slot trims that part off.
-    """
-    return Pos(0, -p.button_height / 2) * _tab_outline(p, grow)
+    body = Pos(0, (top + end_centre) / 2) * Rectangle(2 * radius, top - end_centre)
+    return body + Pos(0, end_centre) * Circle(radius)
 
 
 def _place(sw: Switch) -> Location:
@@ -128,7 +130,7 @@ def flexure_slot(p: Params, sw: Switch) -> Part:
     part has to survive years of pressing.
     """
     s = p.flexure_slot
-    ring = _tab_at(p, grow=s) - _tab_at(p)
+    ring = _tab_outline(p, grow=s) - _tab_outline(p)
 
     # Everything below the hinge line, plus a round end cap on each leg
     # straddling it.
@@ -168,7 +170,7 @@ def flexure_pad(p: Params, sw: Switch) -> Part | None:
     """
     if p.flexure_pad_rise <= 0:
         return None
-    pad = extrude(Circle(p.flexure_pad_diameter / 2), p.flexure_pad_rise)
+    pad = extrude(Circle(p.pad_diameter / 2), p.flexure_pad_rise)
     pad = fillet(
         pad.edges().group_by(Axis.Z)[-1], radius=min(0.4, p.flexure_pad_rise / 2.5)
     )
