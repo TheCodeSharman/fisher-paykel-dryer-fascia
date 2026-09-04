@@ -116,8 +116,11 @@ class Params:
     # ------------------------------------------------------------------
     # Outline. The flange footprint is what you see from outside.
     # ------------------------------------------------------------------
-    width: float = 190.0  # PLACEHOLDER
-    height: float = 60.0  # PLACEHOLDER
+    #: PLACEHOLDER. Provisionally the original fascia's height, F9 + F10, so
+    #: the preview is proportioned like the real thing. What actually bounds
+    #: the outline is the flat metal around the opening on the machine.
+    width: float = 200.0  # PLACEHOLDER
+    height: float = 96.72  # PLACEHOLDER, = 41.14 + 55.58
     corner_radius: float = 4.0
 
     #: The front plate that carries the buttons, LEDs and label. The original
@@ -177,8 +180,8 @@ class Params:
     #: Where the cluster datum (left-most tab's left edge, on the hinge line)
     #: sits in panel coordinates. Slides the whole group about without
     #: disturbing a single measurement. PLACEHOLDER.
-    cluster_x: float = 12.0
-    cluster_y: float = 46.0
+    cluster_x: float = 22.0  # PLACEHOLDER
+    cluster_y: float = 55.58  # puts the hinge line 41.14 below the top, as F9
 
     # ------------------------------------------------------------------
     # LED bezels and light tunnels

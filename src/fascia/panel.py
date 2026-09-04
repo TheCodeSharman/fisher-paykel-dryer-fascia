@@ -154,6 +154,43 @@ def led_bezel(p: Params, led: Led) -> Part:
     return Pos(led.x, led.y, 0) * (body_bore + aperture + chamfer)
 
 
+def _check_features_fit(p: Params) -> None:
+    """Every button and LED has to land on the front plate, inside the walls.
+
+    Easy to break by nudging the outline or the cluster offset, and the result
+    is a hole cut through a wall or out across the flange, which is obvious in
+    the viewer but easy to miss in a batch of exports.
+    """
+    x0 = p.body_inset + p.wall
+    y0 = p.body_inset + p.wall
+    x1, y1 = p.width - x0, p.height - y0
+
+    # Conservative and rotation-independent: the circle the tab opening fits in.
+    half_w = (p.button_width + 2 * p.flexure_slot) / 2
+    half_h = (p.button_height + 2 * p.flexure_slot) / 2
+    tab_reach = (half_w**2 + half_h**2) ** 0.5
+    post = p.led_body_bore / 2 + p.tunnel_wall
+
+    strays = []
+    for sw in p.placed_switches:
+        if not (
+            x0 + tab_reach <= sw.x <= x1 - tab_reach
+            and y0 + tab_reach <= sw.y <= y1 - tab_reach
+        ):
+            strays.append(f"button {sw.name!r} at ({sw.x:.1f}, {sw.y:.1f})")
+    for led in p.placed_leds:
+        if not (x0 + post <= led.x <= x1 - post and y0 + post <= led.y <= y1 - post):
+            strays.append(f"LED {led.name!r} at ({led.x:.1f}, {led.y:.1f})")
+
+    if strays:
+        raise ValueError(
+            "these features fall outside the front plate, which spans "
+            f"({x0:.1f}, {y0:.1f}) to ({x1:.1f}, {y1:.1f}): "
+            + "; ".join(strays)
+            + ". Widen the panel or move the cluster with cluster_x/cluster_y."
+        )
+
+
 def make_panel(p: Params, variant: str = FLEXURE) -> Part:
     """Build the panel for one button strategy."""
     if variant not in VARIANTS:
@@ -168,6 +205,8 @@ def make_panel(p: Params, variant: str = FLEXURE) -> Part:
             f"switches. Reduce reach ({p.reach}) or recheck skin_to_switch "
             f"({p.skin_to_switch})."
         )
+
+    _check_features_fit(p)
 
     part = body(p)
 

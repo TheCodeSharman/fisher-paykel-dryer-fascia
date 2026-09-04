@@ -112,12 +112,16 @@ tab near the middle, away from the cracks.
 | F6 | Slot width | 2.41 mm | uniform all round, tab edge to hole edge. Cross-checked: whole opening 10.63, so ~2.50 a side. Wide because moulding needs steel there |
 | F7 | Tab corner radius | semicircular | so half the tab width, 2.815 |
 | F8 | Tab face | flush, with a 5.25 circle | the pad is flush with the panel face; the tab's flat is recessed *around* it |
-| F9 | Hinge line to top | 41.07 mm | **confirm what "top" is** &mdash; taken as the top edge of the fascia in the same frame, i.e. 41.07 above the hinge line |
-| F10 | Hinge line to bottom edge | | the other half of the height, below the LED row |
+| F9 | Hinge line to top edge | 41.14 mm | above the hinge line |
+| F10 | Hinge line to bottom edge | 55.58 mm | below the hinge line, past the LED row |
 
 Vertical stack in this frame, top to bottom: top of fascia, hinge line, tabs
 hanging down from it, LED row, bottom of fascia. Tabs and LEDs are both at
 negative y.
+
+So the old fascia stood 96.72 tall, with the cluster high in it: 41.14 above
+the hinge, 55.58 below. The new panel takes those proportions provisionally,
+but it only has to cover the board opening, so the machine measurements govern.
 
 Chosen for the print, and why they differ from the measurements:
 
